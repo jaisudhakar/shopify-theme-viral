@@ -1,0 +1,2652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+ <style>
+    .sagar-item {
+    --sagar-p: 0;
+    --sagar-sw: 0deg;
+    flex: 0 0 auto;
+    width: calc(var(--sagar-h) * .33);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    transform: rotate(var(--sagar-sw));
+    transform-origin: 50% 0;
+    transition: width var(--sagar-hspd) cubic-bezier(.25,.46,.45,.94),
+              margin var(--sagar-hspd) cubic-bezier(.25,.46,.45,.94);
+}
+
+ </style>
+ <style>
+
+.sagar-sec {
+  background: var(--sagar-bg);
+  color: var(--sagar-txt);
+  padding: var(--sagar-pt) 0 var(--sagar-pb);
+  position: relative;
+  overflow-x: clip;
+}
+.sagar-sec .sagar-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+}
+
+.sagar-font-heading { font-family: var(--font-heading-family, inherit); }
+.sagar-font-body { font-family: var(--font-body-family, inherit); }
+
+/* ---------- rail caption ---------- */
+.sagar-railcap {
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;
+  margin-bottom: 26px;
+}
+.sagar-railcap-sep { width: 1px; height: 14px; background: currentColor; opacity: .25; }
+.sagar-railcap-dim { opacity: .45; }
+.sagar-railcap p, .sagar-cap-name p { margin: 0; display: inline; }
+
+/* ---------- rod + rack ---------- */
+.sagar-stage { position: relative; padding-top: 14px; }
+.sagar-rod {
+  position: absolute; top: 15px;
+  left: calc(50% - 50vw); right: calc(50% - 50vw);
+  height: 5px; pointer-events: none;
+}
+.sagar-rod-photo {
+  position: absolute; left: 0; right: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 100%; max-width: none; height: 26px; object-fit: fill;
+}
+
+.sagar-rack {
+  --sagar-h: var(--sagar-h-mob);
+  display: flex; align-items: flex-start; justify-content: center;
+  gap: var(--sagar-gap);
+  padding-top: 3px;
+  min-height: calc(var(--sagar-h) + 60px);
+  overflow-x: auto; overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  position: relative;
+}
+.sagar-rack::-webkit-scrollbar { display: none; }
+@media (min-width: 750px) {
+  .sagar-rack { --sagar-h: var(--sagar-h-desk); overflow: visible; }
+}
+
+.sagar-item {
+  --sagar-p: 0;
+  --sagar-sw: 0deg;
+  flex: 0 0 auto;
+  width: calc(var(--sagar-h) * .33);
+  display: flex; flex-direction: column; align-items: center;
+  cursor: pointer;
+  position: relative; z-index: 1;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transform: rotate(var(--sagar-sw));
+  transform-origin: 50% 0;
+  transition: width var(--sagar-hspd) cubic-bezier(.25,.46,.45,.94),
+              margin var(--sagar-hspd) cubic-bezier(.25,.46,.45,.94);
+}
+.sagar-item:focus-visible .sagar-garment { outline: 2px solid var(--sagar-acc); outline-offset: 4px; border-radius: 4px; }
+.sagar-item.sagar-live { z-index: 5; margin-left: var(--sagar-hgap); margin-right: var(--sagar-hgap); }
+
+/* drop-in: hidden until the section scrolls into view (JS removes .sagar-pre).
+   Safety net: if the script never runs, garments reveal themselves after 6s. */
+.sagar-sec.sagar-pre .sagar-item { opacity: 0; animation: sagarReveal 0s 6s forwards; }
+@keyframes sagarReveal { to { opacity: 1; } }
+
+.sagar-garment {
+  position: relative;
+  width: 100%; height: var(--sagar-h);
+  margin-top: calc(var(--sagar-h) * -.012);
+  transform-origin: 50% 0;
+  will-change: transform;
+}
+.sagar-view {
+  position: absolute; inset: 0;
+  display: flex; align-items: flex-start; justify-content: center;
+  opacity: 0; pointer-events: none;
+  will-change: opacity, transform;
+  transform-origin: 50% 0;
+}
+.sagar-view img {
+  height: 100%; width: auto; max-width: none;
+  -webkit-user-drag: none;
+}
+
+/* ---------- swing tags ---------- */
+.sagar-tag {
+  position: absolute; z-index: 4;
+  left: 50%; top: calc(var(--sagar-h) * .045);
+  width: 0; height: 0;
+  transform-origin: 0 0;
+  /* hangs off to the right; lags slightly behind the garment's swing */
+  transform: rotate(calc(-20deg - var(--sagar-sw) * .7));
+  pointer-events: none;
+}
+.sagar-tag::before {
+  content: ''; position: absolute; left: 0; top: 0;
+  width: 1px; height: calc(var(--sagar-h) * .085 + 6px);
+  background: rgba(70, 58, 44, .55);
+}
+.sagar-tag-inner {
+  position: absolute; left: 0; top: calc(var(--sagar-h) * .085);
+  display: grid;
+  transform-origin: 50% 0;
+  /* counter-rotate so the card hangs closer to vertical under its string */
+  transform: translateX(-50%) rotate(13deg) rotateY(0deg);
+  transform-style: preserve-3d;
+  transition: transform .7s cubic-bezier(.3, 1.45, .45, 1);
+}
+.sagar-tag-face {
+  grid-area: 1 / 1;
+  display: flex; align-items: center; justify-content: center;
+  min-width: 40px; padding: 10px 8px 5px;
+  background: #fbf8f1; color: #2b2b28;
+  border-radius: 3px 3px 5px 5px;
+  font-size: 10px; font-weight: 700; letter-spacing: .6px; line-height: 1;
+  text-transform: uppercase; white-space: nowrap;
+  box-shadow: 0 2px 5px rgba(0,0,0,.16), inset 0 0 0 1px rgba(0,0,0,.05);
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
+}
+.sagar-tag-face::before {
+  /* eyelet */
+  content: ''; position: absolute; left: 50%; top: 3px;
+  width: 4px; height: 4px; margin-left: -2px; border-radius: 50%;
+  background: rgba(70, 58, 44, .35);
+}
+.sagar-tag-back { transform: rotateY(180deg); }
+.sagar-tag-alert .sagar-tag-back,
+.sagar-tag-alert.sagar-tag-single .sagar-tag-front { background: var(--sagar-acc); color: #fff; }
+.sagar-tag-alert .sagar-tag-back::before,
+.sagar-tag-alert.sagar-tag-single .sagar-tag-front::before { background: rgba(255,255,255,.55); }
+.sagar-item.sagar-live .sagar-tag-duo .sagar-tag-inner { transform: translateX(-50%) rotate(13deg) rotateY(180deg); }
+@media (hover: none) {
+  /* no hover on touch: show the status side when there is one */
+  .sagar-tag-duo .sagar-tag-inner { transform: translateX(-50%) rotate(13deg) rotateY(180deg); }
+}
+
+/* ---------- caption + CTA ---------- */
+.sagar-caption { text-align: center; margin-top: 26px; }
+.sagar-cap-name {
+  font-size: 15px; font-weight: 600; letter-spacing: .3px; min-height: 22px;
+  transition: opacity .18s ease;
+}
+.sagar-cap-name.sagar-cap-swap { opacity: 0; }
+
+.sagar-cta-w {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 12px;
+  margin: var(--b-mt) 0 var(--b-mb);
+}
+.sagar-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 26px;
+  font-size: 14px; font-weight: 500; text-decoration: none;
+  border-radius: var(--b-rad);
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.sagar-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,.14); }
+.sagar-cta-primary {
+  background: var(--b-pbg); color: var(--b-ptx);
+  border: 1px solid color-mix(in srgb, var(--b-ptx) 30%, transparent);
+}
+.sagar-cta-primary:hover { background: var(--b-phbg); color: var(--b-phtx); border-color: var(--b-phbg); }
+.sagar-cta-secondary {
+  background: transparent; color: var(--b-scol);
+  border: 1px solid color-mix(in srgb, var(--b-scol) 45%, transparent);
+}
+.sagar-cta-secondary:hover { background: var(--b-shbg); color: var(--b-shtx); border-color: var(--b-shbg); }
+
+/* ---------- mobile slider dots ---------- */
+.sagar-dots {
+  display: none;
+  justify-content: center; align-items: center; gap: 7px;
+  margin: 18px auto 0; padding: 9px 16px;
+  width: max-content; max-width: 88%;
+  background: color-mix(in srgb, var(--sagar-txt) 6%, transparent);
+  border-radius: 30px;
+  touch-action: none;
+  -webkit-user-select: none; user-select: none;
+  cursor: grab;
+}
+.sagar-dots.sagar-dots-drag { cursor: grabbing; }
+.sagar-dot {
+  width: 5px; height: 5px; border-radius: 7px; flex: 0 0 auto;
+  background: color-mix(in srgb, var(--sagar-txt) 28%, transparent);
+  border: 0; padding: 0; cursor: pointer;
+  transition: width .3s ease, background .3s ease;
+}
+.sagar-dot.sagar-dot-on { width: 26px; background: var(--sagar-acc); }
+
+/* ---------- focus view (lives on <body>) ---------- */
+.sagar-focus {
+  position: fixed; inset: 0; z-index: 99998;
+  display: none;
+  padding: 30px 20px;
+  color: var(--sagar-txt);
+  overflow-x: hidden; overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.sagar-focus.sagar-focus-open { display: flex; }
+.sagar-focus-bg {
+  position: fixed; inset: 0;
+  background: var(--sagar-focus-bg);
+  -webkit-backdrop-filter: blur(26px);
+  backdrop-filter: blur(26px);
+  opacity: 0;
+  transition: opacity .38s ease;
+}
+.sagar-focus.sagar-focus-in .sagar-focus-bg { opacity: 1; }
+.sagar-focus-inner {
+  margin: auto; width: 100%;
+  display: flex; flex-direction: column; align-items: center;
+  position: relative; z-index: 1;
+}
+.sagar-focus-close,
+.sagar-focus-meta { opacity: 0; transition: opacity .25s ease; }
+.sagar-focus.sagar-focus-in .sagar-focus-close,
+.sagar-focus.sagar-focus-in .sagar-focus-meta { opacity: 1; transition: opacity .35s ease .2s; }
+
+.sagar-focus-close {
+  position: fixed; top: 22px; right: 26px; z-index: 20;
+  display: inline-flex; align-items: center; gap: 10px;
+  background: transparent; border: 0; cursor: pointer;
+  font: inherit; font-size: 13px; color: var(--sagar-txt); letter-spacing: .5px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.sagar-x { position: relative; width: 18px; height: 18px; display: block; }
+.sagar-x::before, .sagar-x::after {
+  content: ''; position: absolute; left: 50%; top: 50%; width: 18px; height: 2px;
+  background: var(--sagar-txt); border-radius: 2px;
+}
+.sagar-x::before { transform: translate(-50%,-50%) rotate(45deg); }
+.sagar-x::after { transform: translate(-50%,-50%) rotate(-45deg); }
+
+.sagar-focus-stagewrap {
+  flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 3;
+}
+.sagar-focus-stage {
+  --sagar-h: min(58vh, var(--sagar-h-focus));
+  position: relative;
+  height: calc(var(--sagar-h) * 1.02);
+  width: var(--sagar-h);
+  perspective: 1400px;
+  transform-origin: 50% 0;
+  cursor: grab;
+  touch-action: pan-y;
+  -webkit-user-select: none; user-select: none;
+}
+.sagar-focus-stage.sagar-pop { animation: sagarPop .38s cubic-bezier(.22,.9,.3,1) both; }
+.sagar-focus-stage.sagar-fade { opacity: 0; transition: opacity .3s ease; }
+@keyframes sagarPop {
+  from { transform: scale(.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.sagar-focus-stage.sagar-dragging { cursor: grabbing; }
+.sagar-focus-stage .sagar-item { width: 100% !important; margin: 0 !important; cursor: inherit; transform: none !important; }
+.sagar-focus-stage .sagar-tag,
+.sagar-focus-stage [data-sagar-json] { display: none !important; }
+.sagar-focus-stage .sagar-garment {
+  height: calc(var(--sagar-h) * .98);
+  transform-style: preserve-3d;
+}
+.sagar-focus-stage .sagar-view {
+  opacity: 0 !important;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.sagar-focus-stage .sagar-view[data-sagar-pos="1"] { opacity: 1 !important; }
+.sagar-focus-stage .sagar-view[data-sagar-pos="-1"] { opacity: 1 !important; transform: rotateY(180deg); }
+
+.sagar-focus-meta { text-align: center; margin-top: 10px; position: relative; z-index: 2; width: 100%; }
+.sagar-focus-idx { font-size: 11px; letter-spacing: 2px; opacity: .45; margin-bottom: 8px; }
+.sagar-focus-name { font-size: 26px; font-weight: 600; letter-spacing: .5px; }
+.sagar-focus-sub { font-size: 13px; opacity: .55; margin-top: 4px; }
+.sagar-focus-price { font-size: 16px; font-weight: 600; margin-top: 6px; }
+
+.sagar-focus-tabs { display: flex; justify-content: center; gap: 26px; margin-top: 14px; }
+.sagar-tab {
+  background: transparent; border: 0; cursor: pointer;
+  font: inherit; font-size: 13px; letter-spacing: .5px; color: var(--sagar-txt); opacity: .45;
+  padding: 4px 2px 6px; position: relative;
+  transition: opacity .2s ease;
+}
+.sagar-tab::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: var(--sagar-acc); border-radius: 2px;
+  transform: scaleX(0); transition: transform .25s ease;
+}
+.sagar-tab.sagar-tab-on { opacity: 1; }
+.sagar-tab.sagar-tab-on::after { transform: scaleX(1); }
+
+/* ---------- quick add ---------- */
+.sagar-qa { margin: 16px auto 0; max-width: min(420px, 88vw); }
+.sagar-qa[hidden] { display: none; }
+.sagar-qa-opt + .sagar-qa-opt { margin-top: 12px; }
+.sagar-qa-optname {
+  font-size: 11px; letter-spacing: 1.6px; text-transform: uppercase;
+  opacity: .55; margin-bottom: 8px;
+}
+.sagar-qa-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.sagar-pill {
+  min-width: 44px; height: 38px; padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--sagar-txt) 22%, transparent);
+  background: transparent; color: var(--sagar-txt);
+  font: inherit; font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  transition: background .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+}
+.sagar-pill:hover { border-color: var(--sagar-txt); }
+.sagar-pill:active { transform: scale(.96); }
+.sagar-pill[aria-pressed="true"] { background: var(--sagar-txt); color: var(--sagar-bg); border-color: var(--sagar-txt); }
+.sagar-pill.sagar-na { opacity: .42; text-decoration: line-through; }
+.sagar-pill:focus-visible, .sagar-qa-btn:focus-visible { outline: 2px solid var(--sagar-acc); outline-offset: 3px; }
+
+.sagar-qa-btn {
+  position: relative;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; height: 50px; margin-top: 16px;
+  border: 0; border-radius: 999px;
+  background: var(--sagar-txt); color: var(--sagar-bg);
+  font: inherit; font-size: 14px; font-weight: 600; letter-spacing: .4px;
+  cursor: pointer;
+  transition: background .25s ease, transform .18s ease, opacity .2s ease;
+}
+.sagar-qa-btn:hover { transform: translateY(-1px); }
+.sagar-qa-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+.sagar-qa-btn.sagar-done { background: var(--sagar-acc); color: #fff; opacity: 1; }
+.sagar-qa-spin {
+  display: none; width: 15px; height: 15px; border-radius: 50%;
+  border: 2px solid currentColor; border-right-color: transparent;
+  animation: sagarSpin .7s linear infinite;
+}
+.sagar-qa-btn.sagar-busy .sagar-qa-spin { display: inline-block; }
+@keyframes sagarSpin { to { transform: rotate(360deg); } }
+.sagar-qa-msg { font-size: 12.5px; margin-top: 9px; min-height: 16px; }
+.sagar-qa-msg a { color: var(--sagar-acc); font-weight: 600; text-decoration: none; border-bottom: 1px solid currentColor; }
+.sagar-qa-msg.sagar-err { color: #b3261e; }
+
+.sagar-fly {
+  position: fixed; z-index: 100000; pointer-events: none;
+  object-fit: contain; margin: 0;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,.22));
+}
+
+/* ---------- focus action bar ---------- */
+.sagar-focus-action {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 100px;
+  margin: 14px auto 0; padding-top: 16px;
+  max-width: min(560px, 88vw);
+  border-top: 1px solid color-mix(in srgb, var(--sagar-txt) 14%, transparent);
+}
+.sagar-focus-action-name {
+  flex: 1 1 auto; min-width: 0;
+  font-size: 14px; font-weight: 500; letter-spacing: .2px; text-align: left;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.sagar-focus-action-btn {
+  flex: 0 0 auto;
+  display: inline-block; padding: 0;
+  background: transparent; border: 0;
+  color: var(--sagar-acc);
+  font-size: 14px; font-weight: 500; letter-spacing: .3px;
+  text-decoration: none; cursor: pointer;
+  position: relative;
+}
+.sagar-focus-action-btn::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -3px; height: 1px;
+  background: var(--sagar-acc);
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform .25s ease;
+}
+.sagar-focus-action-btn:hover { color: var(--sagar-acc); }
+.sagar-focus-action-btn:hover::after,
+.sagar-focus-action-btn:focus-visible::after { transform: scaleX(1); }
+
+.sagar-focus-action.sagar-no-btn { justify-content: center; }
+.sagar-focus-action.sagar-no-btn .sagar-focus-action-btn { display: none; }
+.sagar-focus-action.sagar-no-btn .sagar-focus-action-name { text-align: center; }
+
+/* ---------- wide screens with quick add: garment left, details right ---------- */
+@media (min-width: 990px) {
+  .sagar-focus.sagar-split .sagar-focus-inner {
+    flex-direction: row; justify-content: center;
+    gap: clamp(40px, 6vw, 96px); max-width: 1180px;
+  }
+  .sagar-focus.sagar-split .sagar-focus-stage { --sagar-h: min(76vh, var(--sagar-h-focus)); }
+  .sagar-focus.sagar-split .sagar-focus-meta { width: 380px; max-width: 380px; margin-top: 0; text-align: left; }
+  .sagar-focus.sagar-split .sagar-focus-tabs { justify-content: flex-start; }
+  .sagar-focus.sagar-split .sagar-qa { margin-left: 0; max-width: none; }
+  .sagar-focus.sagar-split .sagar-qa-pills { justify-content: flex-start; }
+  .sagar-focus.sagar-split .sagar-focus-action { max-width: none; gap: 24px; }
+}
+
+/* ---------- below 750px ---------- */
+@media (max-width: 749.98px) {
+  .sagar-sec { padding: calc(var(--sagar-pt) * .65) 0 calc(var(--sagar-pb) * .65); }
+  .sagar-rack { justify-content: flex-start; padding-left: 8px; padding-right: 8px; }
+  .sagar-rack > .sagar-item:first-child { margin-left: auto; }
+  .sagar-rack > .sagar-item:last-child { margin-right: auto; }
+  .sagar-item.sagar-live { margin-left: 0; margin-right: 0; }
+  .sagar-railcap {
+    flex-wrap: wrap; gap: 8px; font-size: 10px; letter-spacing: 1.4px;
+    padding: 0 12px; text-align: center; margin-bottom: 18px;
+  }
+  .sagar-cap-name { font-size: 14px; padding: 0 14px; }
+  .sagar-cta-w { gap: 10px; padding: 0 14px; margin: var(--b-mtm) 0 var(--b-mbm); }
+  .sagar-cta { padding: 10px 20px; font-size: 13px; }
+  .sagar-tag-face { font-size: 9px; min-width: 34px; padding: 9px 6px 4px; }
+
+  .sagar-focus { padding: 60px 16px 24px; }
+  .sagar-focus-stage { --sagar-h: min(42vh, var(--sagar-h-focus-m)); }
+  .sagar-focus-meta { padding: 0 4px; }
+  .sagar-focus-name { font-size: 20px; }
+  .sagar-focus-sub { font-size: 12px; }
+  .sagar-focus-tabs { gap: 34px; }
+  .sagar-focus-close { top: 14px; right: 16px; }
+  .sagar-focus-action {
+    flex-direction: column-reverse; align-items: stretch;
+    gap: 10px; max-width: calc(100% - 16px);
+  }
+  .sagar-focus-action-name { text-align: center; font-size: 13px; }
+  .sagar-focus-action-btn { align-self: center; }
+}
+
+/* ---------- below 600px: slider ---------- */
+@media (max-width: 599.98px) {
+  .sagar-rack {
+    --sagar-h: var(--sagar-h-slide);
+    justify-content: flex-start;
+    gap: calc(var(--sagar-gap) + 10px);
+    scroll-snap-type: x mandatory;
+    padding-left: 14px; padding-right: 14px;
+  }
+  .sagar-item { scroll-snap-align: center; }
+  .sagar-dots { display: flex; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sagar-item, .sagar-cap-name, .sagar-cta, .sagar-focus-bg, .sagar-tag-inner { transition-duration: .01ms !important; }
+  .sagar-focus-stage.sagar-pop { animation: none; }
+  .sagar-sec.sagar-pre .sagar-item { opacity: 1; animation: none; }
+}
+</style>
+<script>
+/* Rack Showcase — Shopify section script (Phase 1).
+ * One instance per [data-sagar-section]. Re-initialises and cleans up with the
+ * theme editor (shopify:section:load / unload, block:select / deselect). */
+(function () {
+  'use strict';
+  if (window.RackShowcase) return;
+
+  var instances = new Map();
+
+  /* ---------- shared: trim transparent space above the hanger ----------
+     Measured from the already-loaded <img> (no second download), once per URL,
+     when the browser is idle. Cross-origin images that can't be read are skipped. */
+  var gapCache = {};
+  var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 60); };
+  function applyTopGap(im, frac) {
+    if (frac > 0.004) im.style.transform = 'translateY(-' + (frac * 100).toFixed(2) + '%)';
+  }
+  function measureTopGap(im) {
+    var src = im.currentSrc || im.src;
+    if (!src || !im.naturalWidth) return;
+    if (gapCache[src] !== undefined) { applyTopGap(im, gapCache[src]); return; }
+    gapCache[src] = 0;
+    idle(function () {
+      var frac = 0;
+      try {
+        var w = Math.min(120, im.naturalWidth || 1);
+        var h = Math.max(1, Math.round((im.naturalHeight || 1) * (w / (im.naturalWidth || 1))));
+        var c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        var x = c.getContext('2d', { willReadFrequently: true });
+        x.drawImage(im, 0, 0, w, h);
+        var d = x.getImageData(0, 0, w, Math.ceil(h * 0.35)).data;   // only the top third matters
+        var rows = Math.ceil(h * 0.35), row = 0, found = false;
+        for (; row < rows && !found; row++) {
+          for (var i = row * w * 4 + 3; i < (row + 1) * w * 4; i += 4) {
+            if (d[i] > 12) { found = true; break; }
+          }
+        }
+        if (found) frac = (row - 1) / h;
+      } catch (e) { frac = 0; }           // tainted (cross-origin) → leave as is
+      gapCache[src] = Math.max(0, frac);
+      [].forEach.call(document.querySelectorAll('.sagar-view img'), function (el) {
+        if ((el.currentSrc || el.src) === src) applyTopGap(el, gapCache[src]);
+      });
+    });
+  }
+
+  /* hi-res prefetch (focus view) — each URL once */
+  var hiDone = {};
+  function prefetchHi(root) {
+    [].forEach.call(root.querySelectorAll('img[data-hi]'), function (im) {
+      var u = im.getAttribute('data-hi');
+      if (!u || hiDone[u]) return;
+      hiDone[u] = 1;
+      var pre = new Image();
+      pre.decoding = 'async';
+      pre.src = u;
+    });
+  }
+
+  function num(el, attr, fallback) {
+    var v = parseFloat(el.getAttribute(attr));
+    return isNaN(v) ? fallback : v;
+  }
+  function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+  function stripEditorAttrs(root) {
+    [root].concat([].slice.call(root.querySelectorAll('*'))).forEach(function (n) {
+      [].slice.call(n.attributes).forEach(function (a) {
+        if (a.name.indexOf('data-shopify') === 0) n.removeAttribute(a.name);
+      });
+    });
+  }
+  function inView(r) {
+    return r && r.width > 0 && r.bottom > 0 && r.top < window.innerHeight && r.right > 0 && r.left < window.innerWidth;
+  }
+
+  /* ---------- one section instance ---------- */
+  function create(sec, opts) {
+    opts = opts || {};
+    var rack = sec.querySelector('[data-sagar-rack]');
+    if (!rack) { sec.classList.remove('sagar-pre'); return null; }
+    var items = [].slice.call(rack.querySelectorAll('[data-sagar-item]'));
+    if (!items.length) { sec.classList.remove('sagar-pre'); return null; }
+
+    var HOVER_MS = num(sec, 'data-hover-speed', 650);
+    var HOVER_GAP = num(sec, 'data-hover-gap', 18);
+    var TURN_MS = num(sec, 'data-turn-speed', 700);
+    var SL_MS = num(sec, 'data-slide-interval', 3000);
+    var SWING = clamp(num(sec, 'data-swing', 60), 0, 100) / 100;
+    var DROP = sec.getAttribute('data-drop') === 'true';
+    var LIFT = sec.getAttribute('data-lift') === 'true';
+    var QA_REDIRECT = sec.getAttribute('data-qa-redirect') === 'true';
+    var TOTAL = items.length;
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var fineHover = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    var slMQ = window.matchMedia ? window.matchMedia('(max-width:599.98px)') : null;
+    var canAnimate = typeof Element !== 'undefined' && !!Element.prototype.animate;
+
+    var dead = false;
+    var listeners = [];
+    var timers = [];
+    function on(t, type, fn, o) {
+      t.addEventListener(type, fn, o || false);
+      listeners.push([t, type, fn, o || false]);
+    }
+    function later(fn, ms) {
+      var id = setTimeout(function () {
+        timers.splice(timers.indexOf(id), 1);
+        if (!dead) fn();
+      }, ms);
+      timers.push(id);
+      return id;
+    }
+
+    // slider state (declared early: initWidths references it)
+    var slOn = false, slTimer = null, slClones = [], slSetW = 0, slDots = [], slHold = 0, slNormTimer = null;
+    // touch two-tap state: tapSel = garment turned by a first tap, tapBack = garment to turn back after the modal closes
+    var cloneStates = [], tapSel = null, tapBack = null, lastPtr = '', tapScrollT = null;
+    var visible = true;
+
+    items.forEach(function (it, i) { it.setAttribute('data-idx', '' + (i + 1)); });
+
+    /* caption swap */
+    var capEl = sec.querySelector('[data-sagar-caption]');
+    var capDefault = capEl ? capEl.innerHTML : '';
+    var capCur = '', capTimer = null;
+    function setCaption(txt) {
+      var key = txt === null ? '' : txt;
+      if (!capEl || capCur === key) return;
+      capCur = key;
+      capEl.classList.add('sagar-cap-swap');
+      if (capTimer) clearTimeout(capTimer);
+      capTimer = setTimeout(function () {
+        if (txt === null) capEl.innerHTML = capDefault;
+        else capEl.textContent = txt;
+        capEl.classList.remove('sagar-cap-swap');
+      }, 160);
+    }
+
+    /* views + widths */
+    function viewsOf(root) {
+      return [].slice.call(root.querySelectorAll('.sagar-view')).map(function (el) {
+        return { el: el, pos: parseFloat(el.getAttribute('data-sagar-pos')) };
+      }).sort(function (a, b) { return a.pos - b.pos; });
+    }
+    function blend(views, v) {
+      for (var i = 0; i < views.length; i++) {
+        var w = 0, p = views[i].pos;
+        var prev = i > 0 ? views[i - 1].pos : null;
+        var next = i < views.length - 1 ? views[i + 1].pos : null;
+        if (v === p) w = 1;
+        else if (v < p && prev !== null && v > prev) w = (v - prev) / (p - prev);
+        else if (v > p && next !== null && v < next) w = (next - v) / (next - p);
+        else if (v <= p && prev === null) w = 1;
+        else if (v >= p && next === null) w = 1;
+        views[i].el.style.opacity = Math.max(0, Math.min(1, w));
+      }
+    }
+
+    var states = items.map(function (it) {
+      var g = it.querySelector('.sagar-garment');
+      return { it: it, g: g, views: viewsOf(g), p: 0, t: 0, asp: null, hpx: 0, blockId: it.getAttribute('data-block-id') };
+    });
+    states.forEach(function (s) { blend(s.views, 0); s.orig = s; });
+    // originals + slider clones (clones turn on tap too)
+    function turnStates() { return cloneStates.length ? states.concat(cloneStates) : states; }
+
+    function aspectOf(view) {
+      var img = view.el.querySelector('img');
+      if (!img) return null;
+      if (img.naturalWidth > 0 && img.naturalHeight > 0) return img.naturalWidth / img.naturalHeight;
+      var aw = +img.getAttribute('width'), ah = +img.getAttribute('height');   // known before load
+      return aw > 0 && ah > 0 ? aw / ah : null;
+    }
+    function refreshAspects() {
+      states.forEach(function (s) {
+        var pts = [];
+        s.views.forEach(function (v) {
+          if (v.pos >= 0) {
+            var a = aspectOf(v);
+            if (a) pts.push({ pos: v.pos, asp: a });
+          }
+        });
+        pts.sort(function (a, b) { return a.pos - b.pos; });
+        s.asp = pts.length ? pts : null;
+        s.flip = s.views.filter(function (v) { return v.pos > 0 && v.pos < 1; }).length === 0;
+      });
+    }
+    function aspectAt(s, e) {
+      var pts = s.asp;
+      if (!pts || !pts.length) return 0.33 + 0.65 * e;
+      if (e <= pts[0].pos) return pts[0].asp;
+      for (var i = 0; i < pts.length - 1; i++) {
+        if (e <= pts[i + 1].pos) {
+          var f = (e - pts[i].pos) / (pts[i + 1].pos - pts[i].pos || 1);
+          return pts[i].asp + (pts[i + 1].asp - pts[i].asp) * f;
+        }
+      }
+      return pts[pts.length - 1].asp;
+    }
+    function measureHeights() {
+      states.forEach(function (s) { s.hpx = s.g.getBoundingClientRect().height || 0; });
+    }
+    function autoFitHeight() {
+      rack.style.removeProperty('--sagar-h');
+      if (slMQ && slMQ.matches) return;
+      var cs = window.getComputedStyle(rack);
+      var base = parseFloat(cs.getPropertyValue('--sagar-h')) || 260;
+      var gap = parseFloat(cs.columnGap) || 0;
+      var W = rack.clientWidth;
+      var sumSide = 0, maxDelta = 0;
+      states.forEach(function (s) {
+        var a0 = aspectAt(s, 0), a1 = aspectAt(s, 1);
+        sumSide += a0;
+        if (a1 - a0 > maxDelta) maxDelta = a1 - a0;
+      });
+      if (sumSide > 0 && W > 0) {
+        var hFit = (W - gap * (states.length - 1) - 8 - HOVER_GAP * 2) / (sumSide + maxDelta);
+        var h = Math.min(base, Math.max(80, hFit));
+        rack.style.setProperty('--sagar-h', h.toFixed(1) + 'px');
+      }
+    }
+    function applyWidth(s, e) {
+      if (!s.hpx) return;
+      s.it.style.width = Math.round(s.hpx * aspectAt(s, e)) + 'px';
+    }
+    function initWidths() {
+      if (dead) return;
+      refreshAspects();
+      autoFitHeight();
+      measureHeights();
+      states.forEach(function (s) { applyWidth(s, s.t); });
+      if (slOn) slSyncWidths();
+    }
+    var widthsQueued = false;
+    function queueWidths() {
+      if (widthsQueued) return;
+      widthsQueued = true;
+      requestAnimationFrame(function () { widthsQueued = false; initWidths(); });
+    }
+    initWidths();
+    on(window, 'load', queueWidths);
+    on(window, 'resize', queueWidths);
+
+    [].forEach.call(rack.querySelectorAll('.sagar-view img[src]'), function (im) {
+      if (im.complete && im.naturalWidth > 0) measureTopGap(im);
+      else on(im, 'load', function () { queueWidths(); measureTopGap(im); }, { once: true });
+    });
+
+    /* ================= SWING PHYSICS =================
+       Each hanger is a damped pendulum around its hook.
+       a = angle (deg, + means the hem swings right), v = angular velocity (deg/s). */
+    var swingOn = SWING > 0 && !reduceMotion;
+    var K_SPRING = 26, K_DAMP = 2.3, MAX_A = 11;
+    var swingRaf = 0, swingLast = 0;
+    function swingEls() { return items.concat(slClones); }
+    function impulse(el, v) {
+      if (!swingOn || !el || dead) return;
+      var s = el._sagarSw || (el._sagarSw = { a: 0, v: 0 });
+      s.v += v * SWING;
+      if (!swingRaf) { swingLast = 0; swingRaf = requestAnimationFrame(swingLoop); }
+    }
+    function swingLoop(ts) {
+      if (dead) return;
+      var dt = swingLast ? Math.min(0.05, (ts - swingLast) / 1000) : 1 / 60;
+      swingLast = ts;
+      var live = false;
+      swingEls().forEach(function (el) {
+        var s = el._sagarSw;
+        if (!s) return;
+        if (Math.abs(s.a) < 0.03 && Math.abs(s.v) < 0.08) {
+          if (s.a !== 0 || s.v !== 0) { s.a = 0; s.v = 0; el.style.setProperty('--sagar-sw', '0deg'); }
+          return;
+        }
+        var h = dt / 2;
+        for (var i = 0; i < 2; i++) {               // semi-implicit Euler, 2 sub-steps
+          s.v += (-K_SPRING * s.a - K_DAMP * s.v) * h;
+          s.a += s.v * h;
+        }
+        if (s.a > MAX_A) { s.a = MAX_A; s.v *= -0.35; }
+        else if (s.a < -MAX_A) { s.a = -MAX_A; s.v *= -0.35; }
+        // CSS rotate(+) is clockwise (hem swings left), so negate
+        el.style.setProperty('--sagar-sw', (-s.a).toFixed(2) + 'deg');
+        live = true;
+      });
+      swingRaf = live ? requestAnimationFrame(swingLoop) : 0;
+    }
+
+    // page scroll: a light breeze through the rack
+    var scY = window.pageYOffset || 0, scT = 0;
+    on(window, 'scroll', function () {
+      if (!swingOn || !visible) return;
+      var now = performance.now();
+      if (now - scT < 110) return;
+      var y = window.pageYOffset || 0, dt = now - scT, dy = y - scY;
+      scY = y; scT = now;
+      if (dt > 400 || !dy) return;
+      var sp = dy / dt;
+      swingEls().forEach(function (el, i) {
+        impulse(el, clamp(sp * 9, -16, 16) * (i % 2 ? 1 : -0.8) * (0.8 + (i % 3) * 0.15));
+      });
+    }, { passive: true });
+
+    // horizontal rack scroll (mobile slider): garments lag behind the swipe
+    var rxL = 0, rxT = 0;
+    on(rack, 'scroll', function () {
+      if (!swingOn || !slOn) return;
+      var now = performance.now();
+      if (now - rxT < 70) return;
+      var x = rack.scrollLeft, dt = now - rxT, dx = x - rxL;
+      rxL = x; rxT = now;
+      if (dt > 300 || Math.abs(dx) > 500 || !dx) return;
+      var sp = dx / dt;
+      swingEls().forEach(function (el) { impulse(el, clamp(-sp * 14, -28, 28)); });
+    }, { passive: true });
+
+    /* ================= HOVER TURN ================= */
+    var running = false, lastTs = 0, rafId = 0;
+    function ss(x) { return x * x * (3 - 2 * x); }
+    function loop(ts) {
+      if (dead) return;
+      if (!lastTs) lastTs = ts;
+      var dt = Math.min(64, ts - lastTs);
+      lastTs = ts;
+      var k = 1 - Math.exp(-dt / (HOVER_MS * 0.3));
+      var busy = false;
+      turnStates().forEach(function (s) {
+        var d = s.t - s.p;
+        if (Math.abs(d) > 0.02) { s.p += d * k; busy = true; }
+        else if (s.p !== s.t) { s.p = s.t; busy = true; }
+        else return;
+        var e = ss(s.p);
+        s.it.style.setProperty('--sagar-p', e.toFixed(4));
+        s.it.classList.toggle('sagar-live', e > 0.02);
+        if (s.flip) {
+          var sideOp = Math.max(0, Math.min(1, (0.56 - e) / 0.12));
+          var frontOp = Math.max(0, Math.min(1, (e - 0.44) / 0.12));
+          s.views.forEach(function (v) {
+            var o = v.pos === 0 ? sideOp : (v.pos === 1 ? frontOp : 0);
+            v.el.style.opacity = o;
+            if (v.pos === 0) {
+              var sAng = Math.min(1, e * 2) * -84;
+              v.el.style.transform = e <= 0 ? 'none' : 'perspective(900px) rotateY(' + sAng.toFixed(2) + 'deg)';
+            } else if (v.pos === 1) {
+              v.el.style.transform = e >= 1 ? 'none' : 'scale(' + (0.92 + 0.08 * e).toFixed(4) + ')';
+            }
+          });
+          s.g.style.transform = 'none';
+        } else {
+          blend(s.views, e);
+          s.g.style.transform = 'perspective(900px) rotateY(' + ((1 - e) * -14).toFixed(2) + 'deg)';
+        }
+      });
+      if (busy) rafId = requestAnimationFrame(loop);
+      else { running = false; lastTs = 0; rafId = 0; }
+    }
+    function kick() {
+      if (!running) { running = true; rafId = requestAnimationFrame(loop); }
+    }
+
+    var curHover = null;
+    function setHover(s) {
+      if (curHover === s) return;
+      var prev = curHover;
+      if (curHover) { curHover.t = 0; applyWidth(curHover, 0); }
+      curHover = s;
+      if (curHover) {
+        var hov = curHover;
+        later(function () { if (curHover === hov) prefetchHi(hov.it); }, 140);   // hover intent
+        curHover.t = 1;
+        applyWidth(curHover, 1);
+        setCaption(curHover.it.getAttribute('data-name') || null);
+        // turning garment widens and nudges its neighbours aside
+        var i = states.indexOf(curHover);
+        if (states[i - 1]) impulse(states[i - 1].it, -26);
+        if (states[i + 1]) impulse(states[i + 1].it, 26);
+      } else {
+        setCaption(null);
+      }
+      if (prev && prev !== curHover) {
+        var j = states.indexOf(prev);
+        if (states[j - 1] && states[j - 1] !== curHover) impulse(states[j - 1].it, 12);
+        if (states[j + 1] && states[j + 1] !== curHover) impulse(states[j + 1].it, -12);
+      }
+      kick();
+    }
+    if (fineHover) {
+      var mX = 0, mT = 0;
+      on(rack, 'mousemove', function (ev) {
+        var x = ev.clientX, y = ev.clientY, now = performance.now();
+
+        // brushing past a hanger sets it swinging in the cursor's direction
+        if (mT && now - mT < 100 && swingOn) {
+          var vx = (x - mX) / Math.max(1, now - mT);
+          states.forEach(function (st) {
+            if (st === curHover) return;
+            var r = st.it.getBoundingClientRect();
+            if (y < r.top || y > r.bottom) return;
+            var c = (r.left + r.right) / 2;
+            if ((mX - c) * (x - c) < 0) impulse(st.it, clamp(vx * 24, -50, 50));
+          });
+        }
+        mX = x; mT = now;
+
+        if (curHover) {
+          var cr = curHover.it.getBoundingClientRect();
+          if (x >= cr.left - 20 && x <= cr.right + 20 && y >= cr.top - 10 && y <= cr.bottom + 40) return;
+        }
+        var best = null, bd = 1e9;
+        states.forEach(function (s) {
+          var r = s.it.getBoundingClientRect();
+          if (y < r.top - 10 || y > r.bottom + 40) return;
+          if (x < r.left - 2 || x > r.right + 2) return;
+          var d = Math.abs(x - (r.left + r.right) / 2);
+          if (d < bd) { bd = d; best = s; }
+        });
+        setHover(best || null);
+      });
+      on(rack, 'mouseleave', function () { mT = 0; setHover(null); });
+    }
+
+    /* ================= TOUCH: TWO-TAP =================
+       1st tap turns the garment to the front, 2nd tap on the same garment opens the modal.
+       Mouse clicks and the keyboard open the modal straight away. */
+    function touchTap() { return lastPtr ? lastPtr !== 'mouse' : !fineHover; }
+    on(rack, 'pointerdown', function (ev) { lastPtr = ev.pointerType || ''; }, true);
+
+    function setTapped(s) {
+      if (tapSel === s) return;
+      var prev = tapSel;
+      if (prev) { prev.t = 0; applyWidth(prev, 0); }
+      tapSel = s;
+      if (s) {
+        s.t = 1;
+        applyWidth(s, 1);
+        prefetchHi(s.it);
+        setCaption(s.it.getAttribute('data-name') || null);
+        impulse(s.it.previousElementSibling, -26);
+        impulse(s.it.nextElementSibling, 26);
+      } else {
+        setCaption(null);
+      }
+      kick();
+    }
+    function releaseTapBack() {
+      var b = tapBack;
+      tapBack = null;
+      if (!b || dead || tapSel === b) return;
+      b.t = 0;
+      applyWidth(b, 0);
+      setCaption(null);
+      kick();
+    }
+    function itemTap(e, s) {
+      e.preventDefault();
+      if (slOn) slPause(6000);
+      if (touchTap() && tapSel !== s) {
+        setTapped(s);                                         // first tap: show the front
+        if (slOn) {
+          var i = slAll().indexOf(s.it);
+          slGoto(i);                                          // centre it…
+          later(function () { if (tapSel === s) slGoto(i); }, HOVER_MS + 40);   // …again once widened
+        }
+        return;
+      }
+      if (tapSel && tapSel !== s) setTapped(null);
+      if (tapSel === s) { tapBack = s; tapSel = null; }       // turns back side-on after the modal closes
+      openFocus(s.orig, s.it);                                // second tap (or mouse click): open the modal
+    }
+    // tapping anywhere outside a garment turns the tapped one back
+    on(document, 'pointerdown', function (e) {
+      if (!tapSel) return;
+      var it = e.target && e.target.closest ? e.target.closest('.sagar-item') : null;
+      if (!it || !rack.contains(it)) setTapped(null);
+    }, true);
+
+    states.forEach(function (s) {
+      on(s.it, 'click', function (e) { itemTap(e, s); });
+      on(s.it, 'keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openFocus(s, s.it); }
+      });
+      on(s.it, 'focus', function () { if (!slOn && !touchTap()) setHover(s); });
+      on(s.it, 'blur', function () { if (!slOn && curHover === s) setHover(null); });
+    });
+
+    /* ================= DROP-IN ENTRANCE ================= */
+    var dropped = !DROP || reduceMotion || !canAnimate || !!opts.noDrop || !('IntersectionObserver' in window);
+    if (dropped) sec.classList.remove('sagar-pre');
+    var dropWaiting = false;
+    function railReady(maxMs, cb) {
+      var vw = window.innerWidth, pending = 0, fired = false;
+      function go() { if (!fired) { fired = true; cb(); } }
+      items.forEach(function (it) {
+        var r = it.getBoundingClientRect();
+        if (r.right < 0 || r.left > vw) return;
+        var im = it.querySelector('.sagar-view[data-sagar-pos="0"] img');
+        if (!im || (im.complete && im.naturalWidth)) return;
+        pending++;
+        var done = function () { if (--pending <= 0) go(); };
+        im.addEventListener('load', done, { once: true });
+        im.addEventListener('error', done, { once: true });
+      });
+      if (!pending) go(); else later(go, maxMs);
+    }
+    function dropIn() {
+      if (dropped) return;
+      dropped = true;
+      var vw = window.innerWidth, n = 0;
+      swingEls().forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.right < 0 || r.left > vw) return;          // off-screen slider clones: no show
+        var delay = 120 + n * 85, dir = n % 2 ? -1 : 1;
+        n++;
+        el.animate([
+          { transform: 'translateY(-90px) rotate(' + (dir * 7) + 'deg)', opacity: 0 },
+          { transform: 'translateY(9px) rotate(' + (-dir * 2) + 'deg)', opacity: 1, offset: 0.7 },
+          { transform: 'translateY(0) rotate(0deg)', opacity: 1 }
+        ], { duration: 640, delay: delay, easing: 'cubic-bezier(.25,.8,.35,1)', fill: 'backwards' });
+        later(function () { impulse(el, dir * 34); }, delay + 560);   // lands on the rod and sways
+      });
+      sec.classList.remove('sagar-pre');
+    }
+
+    /* ================= FOCUS VIEW ================= */
+    var focus = sec.querySelector('[data-sagar-focus]');
+    if (focus) {
+      // copy the section's CSS variables, then move to <body> so position:fixed
+      // is never trapped by a transformed ancestor in the theme
+      focus.setAttribute('style', sec.getAttribute('style') || '');
+      document.body.appendChild(focus);
+    }
+    function q(sel) { return focus ? focus.querySelector(sel) : null; }
+    var fbg = q('[data-sagar-fbg]');
+    var finner = q('[data-sagar-finner]');
+    var fstage = q('[data-sagar-fstage]');
+    var fname = q('[data-sagar-fname]');
+    var fsub = q('[data-sagar-fsub]');
+    var fprice = q('[data-sagar-fprice]');
+    var fidx = q('[data-sagar-fidx]');
+    var facBar = q('[data-sagar-factionbar]');
+    var facName = q('[data-sagar-factionname]');
+    var facBtn = q('[data-sagar-factionbtn]');
+    var facLbl = q('[data-sagar-factionlabel]');
+    var tabF = q('[data-sagar-tab="front"]');
+    var tabB = q('[data-sagar-tab="back"]');
+    var closeBtn = q('.sagar-focus-close');
+    var fGarment = null, fAng = 0, fAngT = 0, fAnim = null, fLast = 0, prevOverflow = '';
+    var fCloseTimer = null, lastActive = null;
+    var fSrc = null, fState = null, fFlight = null, closing = false;
+
+    function T(key, fb) { return (focus && focus.getAttribute('data-t-' + key)) || fb; }
+    var STR = {
+      add: T('add', 'Add to cart'),
+      soldout: T('soldout', 'Sold out'),
+      added: T('added', 'Added to cart'),
+      viewcart: T('viewcart', 'View cart'),
+      unavailable: T('unavailable', 'Unavailable'),
+      error: T('error', 'Could not add to cart. Please try again.')
+    };
+
+    function isOpen() { return !!focus && focus.classList.contains('sagar-focus-open'); }
+    function fApply() {
+      if (fGarment) fGarment.style.transform = 'rotateY(' + fAng.toFixed(2) + 'deg)';
+    }
+    function fblendLoop(ts) {
+      if (dead) return;
+      if (!fLast) fLast = ts;
+      var dt = Math.min(80, ts - fLast);
+      fLast = ts;
+      var d = fAngT - fAng;
+      var k = 1 - Math.exp(-dt / (TURN_MS * 0.22));
+      if (Math.abs(d) < 0.4) fAng = fAngT; else fAng += d * k;
+      fApply();
+      if (fAng !== fAngT) fAnim = requestAnimationFrame(fblendLoop);
+      else {
+        if (fAng === -180) { fAng = fAngT = 180; fApply(); }
+        fAnim = null; fLast = 0;
+      }
+    }
+    function setTabs(front) {
+      if (tabF) { tabF.classList.toggle('sagar-tab-on', front); tabF.setAttribute('aria-pressed', front ? 'true' : 'false'); }
+      if (tabB) { tabB.classList.toggle('sagar-tab-on', !front); tabB.setAttribute('aria-pressed', front ? 'false' : 'true'); }
+    }
+    function fgo(target) {
+      fAngT = target;
+      setTabs(target === 0);
+      if (!fAnim) fAnim = requestAnimationFrame(fblendLoop);
+    }
+
+    var fDrag = false, fDragX = 0, fDragA = 0;
+    function fEndDrag() {
+      if (!fDrag) return;
+      fDrag = false;
+      if (fstage) fstage.classList.remove('sagar-dragging');
+      var t = Math.abs(fAng) < 90 ? 0 : (fAng > 0 ? 180 : -180);
+      fAngT = t;
+      setTabs(t === 0);
+      if (!fAnim) fAnim = requestAnimationFrame(fblendLoop);
+    }
+    if (fstage) {
+      on(fstage, 'pointerdown', function (ev) {
+        if (!fGarment || !isOpen() || closing) return;
+        fDrag = true; fDragX = ev.clientX; fDragA = fAng;
+        if (fAnim) { cancelAnimationFrame(fAnim); fAnim = null; fLast = 0; }
+        try { fstage.setPointerCapture(ev.pointerId); } catch (e) {}
+        fstage.classList.add('sagar-dragging');
+        ev.preventDefault();
+      });
+      on(fstage, 'pointermove', function (ev) {
+        if (!fDrag) return;
+        var a = fDragA + (ev.clientX - fDragX) * 0.45;
+        if (a < -220) a = -220;
+        if (a > 220) a = 220;
+        fAng = a; fAngT = a;
+        fApply();
+      });
+      on(fstage, 'pointerup', fEndDrag);
+      on(fstage, 'pointercancel', fEndDrag);
+      on(fstage, 'lostpointercapture', fEndDrag);
+    }
+
+    function pad2(n) { n = '' + n; return n.length < 2 ? '0' + n : n; }
+
+    /* lift off / hang back: animate the stage between the rail slot and the centre */
+    function flight(fromRect, reverse, done) {
+      var to = fstage.getBoundingClientRect();
+      var gh = to.height * (0.98 / 1.02);
+      var sc = fromRect.height / (gh || 1);
+      var dx = (fromRect.left + fromRect.width / 2) - (to.left + to.width / 2);
+      var dy = fromRect.top - to.top;
+      var lift = Math.min(90, Math.abs(dy) * 0.25 + 34);
+      var start = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scale(' + sc.toFixed(4) + ')';
+      var mid = 'translate(' + (dx * 0.4).toFixed(1) + 'px,' + (dy * 0.4 - lift).toFixed(1) + 'px) scale(' +
+                ((sc + 1) / 2 * 1.03).toFixed(4) + ') rotate(' + (dx > 0 ? -2.5 : 2.5) + 'deg)';
+      var end = 'translate(0px,0px) scale(1)';
+      var frames = reverse
+        ? [{ transform: end }, { transform: mid, offset: 0.5 }, { transform: start }]
+        : [{ transform: start }, { transform: mid, offset: 0.5 }, { transform: end }];
+      var a = fstage.animate(frames, {
+        duration: reverse ? 560 : 680,
+        easing: reverse ? 'cubic-bezier(.45,0,.55,1)' : 'cubic-bezier(.22,.85,.3,1)',
+        fill: 'both'
+      });
+      if (done) a.onfinish = done;
+      return a;
+    }
+
+    function resetFocusState() {
+      if (fFlight) { try { fFlight.cancel(); } catch (e) {} fFlight = null; }
+      if (fCloseTimer) { clearTimeout(fCloseTimer); fCloseTimer = null; }
+      if (fSrc) { fSrc.style.visibility = ''; fSrc = null; }
+      closing = false;
+      if (fstage) fstage.classList.remove('sagar-pop', 'sagar-fade');
+    }
+
+    function openFocus(s, srcEl) {
+      if (!focus || !fstage) return;
+      resetFocusState();
+      srcEl = srcEl || s.it;
+      lastActive = document.activeElement;
+
+      fstage.innerHTML = '';
+      var clone = s.it.cloneNode(true);
+      stripEditorAttrs(clone);
+      clone.removeAttribute('tabindex');
+      clone.removeAttribute('role');
+      clone.removeAttribute('aria-label');
+      clone.removeAttribute('data-sagar-item');
+      clone.classList.remove('sagar-live');
+      clone.style.setProperty('--sagar-p', '1');
+      clone.style.setProperty('--sagar-sw', '0deg');
+      [].forEach.call(clone.querySelectorAll('.sagar-view'), function (v) {
+        v.style.transform = '';
+        v.style.opacity = '';
+      });
+      [].forEach.call(clone.querySelectorAll('img'), function (im) {
+        im.removeAttribute('loading');
+        im.removeAttribute('fetchpriority');
+        var hi = im.getAttribute('data-hi');
+        if (hi && im.getAttribute('src') !== hi) im.setAttribute('src', hi);   // low-res stays visible until hi arrives
+      });
+      var cg = clone.querySelector('.sagar-garment');
+      if (cg) cg.style.transform = 'rotateY(0deg)';
+      fstage.appendChild(clone);
+      fGarment = cg;
+      fAng = 0; fAngT = 0;
+      setTabs(true);
+
+      var name = s.it.getAttribute('data-name') || '';
+      var sub = s.it.getAttribute('data-sub') || '';
+      var price = s.it.getAttribute('data-price') || '';
+      if (fname) fname.textContent = name;
+      if (fsub) { fsub.textContent = sub; fsub.style.display = sub ? '' : 'none'; }
+      if (fprice) { fprice.textContent = price; fprice.style.display = price ? '' : 'none'; }
+      if (fidx) fidx.textContent = pad2(s.it.getAttribute('data-idx') || '1') + ' / ' + pad2(TOTAL);
+      focus.setAttribute('aria-label', name || 'Product view');
+
+      if (facName) facName.textContent = name;
+      var bLbl = (s.it.getAttribute('data-btn-label') || '').trim();
+      var bUrl = s.it.getAttribute('data-btn-url') || '';
+      var bTgt = s.it.getAttribute('data-btn-target') || '';
+      if (facLbl) facLbl.textContent = bLbl;
+      if (facBtn) {
+        facBtn.setAttribute('href', bUrl || '#');
+        facBtn.setAttribute('target', bTgt === '_blank' ? '_blank' : '_self');
+        if (bTgt === '_blank') facBtn.setAttribute('rel', 'noopener');
+        else facBtn.removeAttribute('rel');
+      }
+      if (facBar) facBar.classList.toggle('sagar-no-btn', !bLbl);
+
+      qaSetup(s);
+
+      var srcG = srcEl.querySelector('.sagar-garment');
+      var fromRect = srcG ? srcG.getBoundingClientRect() : null;
+
+      try { prevOverflow = document.body.style.overflow; document.body.style.overflow = 'hidden'; } catch (e) {}
+      focus.classList.add('sagar-focus-open');
+      focus.setAttribute('aria-hidden', 'false');
+      focus.scrollTop = 0;
+      fState = s;
+
+      if (LIFT && canAnimate && !reduceMotion && inView(fromRect)) {
+        fSrc = srcEl;
+        srcEl.style.visibility = 'hidden';           // the hanger is now empty
+        fFlight = flight(fromRect, false);
+      } else {
+        void fstage.offsetWidth;
+        fstage.classList.add('sagar-pop');
+      }
+
+      requestAnimationFrame(function () { focus.classList.add('sagar-focus-in'); });
+      if (closeBtn) { try { closeBtn.focus({ preventScroll: true }); } catch (e) { closeBtn.focus(); } }
+      if (!fAnim) fAnim = requestAnimationFrame(fblendLoop);
+    }
+
+    function landBack(src, s) {
+      impulse(src, (Math.random() > 0.5 ? 1 : -1) * 40);
+      // it lands facing you, then turns back to its side-on resting pose
+      if (s && src === s.it && s !== curHover && s.flip) { s.p = 1; s.t = 0; kick(); }
+    }
+
+    function closeFocus() {
+      if (!isOpen() || closing) return;
+      closing = true;
+      if (fAnim) { cancelAnimationFrame(fAnim); fAnim = null; fLast = 0; }
+      fDrag = false;
+      if (fstage) fstage.classList.remove('sagar-dragging');
+      focus.classList.remove('sagar-focus-in');
+      focus.setAttribute('aria-hidden', 'true');
+      try { document.body.style.overflow = prevOverflow; } catch (e) {}
+
+      var src = fSrc, s = fState;
+      var srcG = src && src.isConnected ? src.querySelector('.sagar-garment') : null;
+      var r = srcG ? srcG.getBoundingClientRect() : null;
+
+      function finish() {
+        if (fFlight) { try { fFlight.cancel(); } catch (e) {} fFlight = null; }
+        focus.classList.remove('sagar-focus-open');
+        fstage.classList.remove('sagar-pop', 'sagar-fade');
+        fstage.innerHTML = '';
+        fGarment = null; fCloseTimer = null; closing = false;
+      }
+
+      if (src && inView(r) && canAnimate && !reduceMotion) {
+        if (fFlight) { try { fFlight.cancel(); } catch (e) {} }
+        fFlight = flight(r, true, function () {
+          if (dead) return;
+          src.style.visibility = '';
+          fSrc = null;
+          landBack(src, s);
+          releaseTapBack();
+          finish();
+        });
+      } else {
+        if (src) src.style.visibility = '';
+        fSrc = null;
+        fstage.classList.add('sagar-fade');
+        releaseTapBack();
+        fCloseTimer = setTimeout(finish, 320);
+      }
+      if (lastActive && lastActive.isConnected && lastActive.focus) {
+        try { lastActive.focus({ preventScroll: true }); } catch (e) {}
+      }
+      slPause();
+    }
+
+    if (closeBtn) {
+      on(closeBtn, 'click', function (e) { e.preventDefault(); e.stopPropagation(); closeFocus(); });
+    }
+    if (focus) {
+      on(focus, 'click', function (e) {
+        if (e.target === focus || e.target === fbg || e.target === finner) closeFocus();
+      });
+    }
+    on(document, 'keydown', function (e) {
+      if (!isOpen() || closing) return;
+      if (e.key === 'Escape') { closeFocus(); return; }
+      var tag = e.target && e.target.tagName;
+      if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && tag !== 'INPUT') { fgo(fAngT === 0 ? 180 : 0); return; }
+      if (e.key === 'Tab') {
+        var f = [].filter.call(focus.querySelectorAll('button, a[href]'), function (el) {
+          return el.offsetParent !== null && !el.disabled;
+        });
+        if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (!focus.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+        else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+    if (tabF) on(tabF, 'click', function () { fgo(0); });
+    if (tabB) on(tabB, 'click', function () { fgo(180); });
+
+    /* ================= QUICK ADD ================= */
+    var qa = q('[data-sagar-qa]'), qaOpts = q('[data-sagar-qa-opts]'), qaBtn = q('[data-sagar-qa-btn]');
+    var qaLbl = q('[data-sagar-qa-lbl]'), qaMsg = q('[data-sagar-qa-msg]');
+    var qaData = null, qaSel = [], qaVariant = null, qaBusy = false, qaPriceDefault = '';
+
+    function qaFind(sel) {
+      if (!qaData) return null;
+      for (var i = 0; i < qaData.variants.length; i++) {
+        var v = qaData.variants[i], ok = true;
+        for (var j = 0; j < sel.length; j++) { if (v.opts[j] !== sel[j]) { ok = false; break; } }
+        if (ok) return v;
+      }
+      return null;
+    }
+    function qaSetup(s) {
+      qaData = null;
+      if (!qa) { if (focus) focus.classList.remove('sagar-split'); return; }
+      var el = s.it.querySelector('[data-sagar-json]');
+      if (el) { try { qaData = JSON.parse(el.textContent); } catch (e) { qaData = null; } }
+      if (!qaData || !qaData.variants || !qaData.variants.length) {
+        qa.hidden = true;
+        focus.classList.remove('sagar-split');
+        return;
+      }
+      qa.hidden = false;
+      focus.classList.add('sagar-split');
+      qaMsg.textContent = ''; qaMsg.classList.remove('sagar-err');
+      qaBtn.classList.remove('sagar-done', 'sagar-busy');
+      qaBusy = false;
+      qaPriceDefault = s.it.getAttribute('data-price') || '';
+      var first = null;
+      for (var i = 0; i < qaData.variants.length; i++) { if (qaData.variants[i].av) { first = qaData.variants[i]; break; } }
+      qaSel = (first || qaData.variants[0]).opts.slice();
+      qaRender();
+      qaUpdate();
+    }
+    function qaRender() {
+      qaOpts.innerHTML = '';
+      var single = qaData.options.length === 1 && qaData.options[0].values.length <= 1;   // "Default Title"
+      if (single) return;
+      qaData.options.forEach(function (o, oi) {
+        var row = document.createElement('div');
+        row.className = 'sagar-qa-opt';
+        row.setAttribute('role', 'group');
+        row.setAttribute('aria-label', o.name);
+        var lab = document.createElement('div');
+        lab.className = 'sagar-qa-optname';
+        lab.textContent = o.name;
+        var pills = document.createElement('div');
+        pills.className = 'sagar-qa-pills';
+        o.values.forEach(function (val) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'sagar-pill';
+          b.textContent = val;
+          b.setAttribute('data-oi', oi);
+          b.setAttribute('data-val', val);
+          b.addEventListener('click', function () {
+            qaSel[oi] = val;
+            qaMsg.textContent = ''; qaMsg.classList.remove('sagar-err');
+            qaBtn.classList.remove('sagar-done');
+            qaUpdate();
+          });
+          pills.appendChild(b);
+        });
+        row.appendChild(lab);
+        row.appendChild(pills);
+        qaOpts.appendChild(row);
+      });
+    }
+    function qaUpdate() {
+      qaVariant = qaFind(qaSel);
+      [].forEach.call(qaOpts.querySelectorAll('.sagar-pill'), function (b) {
+        var oi = +b.getAttribute('data-oi'), val = b.getAttribute('data-val');
+        b.setAttribute('aria-pressed', qaSel[oi] === val ? 'true' : 'false');
+        var test = qaSel.slice(); test[oi] = val;
+        var v = qaFind(test), na = !v || !v.av;
+        b.classList.toggle('sagar-na', na);
+        b.setAttribute('aria-label', val + (na ? ' – ' + STR.soldout : ''));
+      });
+      if (qaBtn.classList.contains('sagar-done')) return;
+      var ok = !!(qaVariant && qaVariant.av);
+      qaBtn.disabled = !ok || qaBusy;
+      qaLbl.textContent = !qaVariant ? STR.unavailable : (qaVariant.av ? STR.add : STR.soldout);
+      if (fprice) {
+        var pr = qaVariant && qaVariant.price ? qaVariant.price : qaPriceDefault;
+        fprice.textContent = pr;
+        fprice.style.display = pr ? '' : 'none';
+      }
+    }
+    function cartRoot() {
+      return (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+    }
+    function qaAdd() {
+      if (!qaVariant || !qaVariant.av || qaBusy) return;
+      qaBusy = true;
+      qaBtn.disabled = true;
+      qaBtn.classList.add('sagar-busy');
+      qaMsg.textContent = ''; qaMsg.classList.remove('sagar-err');
+      var root = cartRoot();
+      fetch(root + 'cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          items: [{ id: qaVariant.id, quantity: 1 }],
+          sections: 'cart-icon-bubble',
+          sections_url: window.location.pathname
+        })
+      })
+        .then(function (r) {
+          return r.json().then(function (j) {
+            if (!r.ok || j.status) throw new Error(j.description || j.message || STR.error);
+            return j;
+          });
+        })
+        .then(function (j) {
+          if (dead) return;
+          if (QA_REDIRECT) { window.location.href = root + 'cart'; return; }
+          qaBtn.classList.add('sagar-done');
+          qaLbl.textContent = STR.added;
+          qaMsg.innerHTML = '';
+          var a = document.createElement('a');
+          a.href = root + 'cart';
+          a.textContent = STR.viewcart + ' \u2192';
+          qaMsg.appendChild(a);
+          updateCartUI(j);
+          flyToCart();
+          later(function () {
+            if (!qaBtn.classList.contains('sagar-done')) return;
+            qaBtn.classList.remove('sagar-done');
+            qaUpdate();
+          }, 2600);
+        })
+        .catch(function (err) {
+          if (dead) return;
+          qaMsg.textContent = (err && err.message) || STR.error;
+          qaMsg.classList.add('sagar-err');
+        })
+        .then(function () {
+          if (dead) return;
+          qaBusy = false;
+          qaBtn.classList.remove('sagar-busy');
+          if (qaBtn.classList.contains('sagar-done')) qaBtn.disabled = false;
+          else qaUpdate();
+        });
+    }
+    if (qaBtn) on(qaBtn, 'click', function (e) { e.preventDefault(); qaAdd(); });
+
+    /* keep the theme's cart icon / drawer in sync (Dawn + generic hooks) */
+    function updateCartUI(res) {
+      try {
+        var html = res && res.sections && res.sections['cart-icon-bubble'];
+        var bubble = document.getElementById('cart-icon-bubble');
+        if (html && bubble) {
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          var src = doc.querySelector('.shopify-section') || doc.body;
+          bubble.innerHTML = src.innerHTML;
+        }
+      } catch (e) {}
+      fetch(cartRoot() + 'cart.js', { headers: { 'Accept': 'application/json' } })
+        .then(function (r) { return r.json(); })
+        .then(function (cart) {
+          [].forEach.call(document.querySelectorAll('[data-cart-count]'), function (el) { el.textContent = cart.item_count; });
+          try {
+            if (typeof window.publish === 'function' && window.PUB_SUB_EVENTS && window.PUB_SUB_EVENTS.cartUpdate) {
+              window.publish(window.PUB_SUB_EVENTS.cartUpdate, { source: 'rack-showcase', cartData: cart });
+            }
+          } catch (e) {}
+          document.dispatchEvent(new CustomEvent('cart:refresh', { detail: cart }));
+          document.dispatchEvent(new CustomEvent('rack:cart-updated', { detail: cart }));
+        })
+        .catch(function () {});
+    }
+    function flyToCart() {
+      if (reduceMotion || !canAnimate || !fstage) return;
+      var img = fstage.querySelector('.sagar-view[data-sagar-pos="1"] img');
+      if (!img) return;
+      var from = img.getBoundingClientRect();
+      if (!from.width) return;
+      var target = document.querySelector('#cart-icon-bubble, [data-cart-icon], .header__icon--cart, a[href$="/cart"]');
+      var tr = target ? target.getBoundingClientRect() : null;
+      if (!tr || !tr.width) tr = { left: window.innerWidth - 48, top: 18, width: 24, height: 24 };
+      var f = document.createElement('img');
+      f.src = img.currentSrc || img.src;
+      f.alt = '';
+      f.className = 'sagar-fly';
+      f.style.left = from.left + 'px';
+      f.style.top = from.top + 'px';
+      f.style.width = from.width + 'px';
+      f.style.height = from.height + 'px';
+      document.body.appendChild(f);
+      var dx = (tr.left + tr.width / 2) - (from.left + from.width / 2);
+      var dy = (tr.top + tr.height / 2) - (from.top + from.height / 2);
+      var a = f.animate([
+        { transform: 'translate(0,0) scale(.9)', opacity: 0.95 },
+        { transform: 'translate(' + (dx * 0.55) + 'px,' + (dy * 0.55 - 70) + 'px) scale(.32) rotate(-8deg)', opacity: 1, offset: 0.6 },
+        { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(.04) rotate(-14deg)', opacity: 0.3 }
+      ], { duration: 820, easing: 'cubic-bezier(.5,0,.3,1)' });
+      a.onfinish = function () {
+        if (f.parentNode) f.parentNode.removeChild(f);
+        if (target && target.animate) {
+          target.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.28)' }, { transform: 'scale(1)' }],
+            { duration: 380, easing: 'ease-out' });
+        }
+      };
+    }
+
+    /* ================= MOBILE SLIDER (< 600px) ================= */
+    var dotsWrap = sec.querySelector('[data-sagar-dots]');
+
+    function slAll() { return items.concat(slClones); }
+    function slNearest() {
+      var center = rack.scrollLeft + rack.clientWidth / 2, best = 0, bd = 1e9;
+      slAll().forEach(function (el, i) {
+        var c = el.offsetLeft + el.offsetWidth / 2;
+        var d = Math.abs(c - center);
+        if (d < bd) { bd = d; best = i; }
+      });
+      return best;
+    }
+    function slGoto(i, smooth) {
+      var el = slAll()[i];
+      if (!el) return;
+      rack.scrollTo({
+        left: el.offsetLeft - (rack.clientWidth - el.offsetWidth) / 2,
+        behavior: smooth === false || reduceMotion ? 'auto' : 'smooth'
+      });
+    }
+    function slNorm() {
+      if (slSetW <= 0 || !slClones.length) return;
+      if (rack.scrollLeft >= slSetW) rack.scrollLeft = rack.scrollLeft - slSetW;
+      else if (slNearest() >= items.length) rack.scrollLeft = Math.max(0, rack.scrollLeft - slSetW);
+    }
+    function slDotsUpdate() {
+      if (!slDots.length) return;
+      var i = slNearest() % items.length;
+      slDots.forEach(function (d, k) {
+        d.classList.toggle('sagar-dot-on', k === i);
+        d.setAttribute('aria-current', k === i ? 'true' : 'false');
+      });
+    }
+    function slSyncWidths() {
+      slClones.forEach(function (c, k) {
+        var cs = cloneStates[k], o = cs && cs.orig;
+        if (cs && o && o.hpx) {
+          cs.asp = o.asp; cs.flip = o.flip; cs.hpx = o.hpx;
+          applyWidth(cs, cs.t);
+        } else {
+          var it = items[k % items.length];
+          if (it) c.style.width = it.style.width || getComputedStyle(it).width;
+        }
+      });
+      if (slClones.length && !tapSel) slSetW = slClones[0].offsetLeft - items[0].offsetLeft;
+    }
+    function slTick() {
+      if (!slOn || !visible || document.hidden) return;
+      if (slHold > Date.now()) return;
+      if (isOpen()) return;
+      if (tapSel) { setTapped(null); return; }   // turn back first, advance on the next tick
+      var idx = slNearest();
+      if (slSetW > 0 && idx >= items.length) {
+        idx -= items.length;
+        var el = items[idx];
+        rack.scrollLeft = Math.max(0, el.offsetLeft - (rack.clientWidth - el.offsetWidth) / 2);
+      }
+      slGoto(idx + 1);
+    }
+    function slPause(ms) { slHold = Date.now() + (ms || 4000); }
+
+    function slSetup() {
+      if (slOn || items.length < 2) return;
+      slOn = true;
+      items.forEach(function (it, k) {
+        var c = it.cloneNode(true);
+        c.setAttribute('data-sagar-clone', '1');
+        c.removeAttribute('data-sagar-item');
+        c.setAttribute('tabindex', '-1');
+        c.setAttribute('aria-hidden', 'true');
+        c.style.visibility = '';
+        c.style.setProperty('--sagar-p', '0');
+        c.classList.remove('sagar-live');
+        stripEditorAttrs(c);
+        var o = states[k], cg = c.querySelector('.sagar-garment');
+        var cs = { it: c, g: cg, views: viewsOf(cg), p: 0, t: 0, asp: o.asp, flip: o.flip, hpx: o.hpx, blockId: o.blockId, orig: o };
+        c.addEventListener('click', function (e) { itemTap(e, cs); });
+        rack.appendChild(c);
+        slClones.push(c);
+        cloneStates.push(cs);
+      });
+      slSyncWidths();
+      if (dotsWrap) {
+        dotsWrap.innerHTML = '';
+        slDots = items.map(function (it, k) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'sagar-dot' + (k === 0 ? ' sagar-dot-on' : '');
+          b.setAttribute('aria-label', 'Go to ' + (it.getAttribute('data-name') || 'product ' + (k + 1)));
+          b.addEventListener('click', function () { slPause(); slNorm(); slGoto(k); });
+          dotsWrap.appendChild(b);
+          return b;
+        });
+      }
+      slGoto(0, false);
+      slDotsUpdate();
+      if (!reduceMotion) slTimer = setInterval(slTick, SL_MS);
+    }
+    function slTeardown() {
+      if (!slOn) return;
+      slOn = false;
+      if (slTimer) { clearInterval(slTimer); slTimer = null; }
+      slClones.forEach(function (c) { if (c.parentNode) c.parentNode.removeChild(c); });
+      slClones = []; slSetW = 0;
+      if (tapSel && tapSel.orig !== tapSel) tapSel = null;
+      if (tapBack && tapBack.orig !== tapBack) tapBack = null;
+      cloneStates = [];
+      if (dotsWrap) dotsWrap.innerHTML = '';
+      slDots = [];
+      rack.scrollLeft = 0;
+      initWidths();
+    }
+    function slCheck() {
+      if (dead) return;
+      if (tapSel) setTapped(null);
+      if (slMQ && slMQ.matches) {
+        if (curHover) setHover(null);
+        if (!slOn) { initWidths(); slSetup(); } else slSyncWidths();
+      } else {
+        slTeardown();
+      }
+    }
+
+    // persistent slider listeners (registered once; no-ops while slider is off)
+    if (dotsWrap) {
+      var dOn = false;
+      var dScrub = function (x) {
+        var r = dotsWrap.getBoundingClientRect();
+        var f = Math.max(0, Math.min(0.999, (x - r.left) / r.width));
+        slGoto(Math.floor(f * items.length));
+      };
+      var dEnd = function () {
+        if (!dOn) return;
+        dOn = false;
+        dotsWrap.classList.remove('sagar-dots-drag');
+        slPause();
+      };
+      on(dotsWrap, 'pointerdown', function (ev) {
+        if (!slOn) return;
+        dOn = true; slPause(6000); slNorm();
+        dotsWrap.classList.add('sagar-dots-drag');
+        try { dotsWrap.setPointerCapture(ev.pointerId); } catch (e) {}
+        dScrub(ev.clientX);
+        ev.preventDefault();
+      });
+      on(dotsWrap, 'pointermove', function (ev) { if (dOn) dScrub(ev.clientX); });
+      on(dotsWrap, 'pointerup', dEnd);
+      on(dotsWrap, 'pointercancel', dEnd);
+    }
+    on(rack, 'scroll', function () { if (slOn) slDotsUpdate(); }, { passive: true });
+    on(rack, 'touchstart', function () { if (slOn) slPause(); }, { passive: true });
+    on(rack, 'touchend', function () {
+      if (!slOn) return;
+      slPause();
+      if (slNormTimer) clearTimeout(slNormTimer);
+      slNormTimer = setTimeout(function () { if (!tapSel) slNorm(); }, 450);
+    }, { passive: true });
+    // swiping the tapped garment away turns it back
+    on(rack, 'scroll', function () {
+      if (!slOn || !tapSel) return;
+      if (tapScrollT) clearTimeout(tapScrollT);
+      tapScrollT = setTimeout(function () {
+        tapScrollT = null;
+        if (dead || !slOn || !tapSel) return;
+        if (slAll()[slNearest()] !== tapSel.it) setTapped(null);
+      }, 180);
+    }, { passive: true });
+    on(window, 'load', function () { if (slOn) { slSyncWidths(); slDotsUpdate(); } });
+
+    var io = null;
+    if ('IntersectionObserver' in window) {
+      io = new IntersectionObserver(function (entries) {
+        var en = entries[0];
+        visible = en ? en.isIntersecting : true;
+        if (en && en.isIntersecting && en.intersectionRatio >= 0.2 && !dropped && !dropWaiting) {
+          dropWaiting = true;
+          railReady(1500, dropIn);
+        }
+      }, { threshold: [0, 0.2] });
+      io.observe(sec);
+    }
+
+    slCheck();
+    if (slMQ) {
+      if (slMQ.addEventListener) on(slMQ, 'change', slCheck);
+      else if (slMQ.addListener) slMQ.addListener(slCheck);
+    }
+
+    /* ---------- theme editor hooks ---------- */
+    function select(blockId) {
+      var s = states.filter(function (x) { return x.blockId === blockId; })[0];
+      if (!s) return;
+      if (slOn) { slPause(10000); slNorm(); slGoto(states.indexOf(s)); }
+      else setHover(s);
+    }
+    function deselect() { if (!slOn) setHover(null); }
+
+    function destroy() {
+      dead = true;
+      if (isOpen()) { try { document.body.style.overflow = prevOverflow; } catch (e) {} }
+      listeners.forEach(function (l) { l[0].removeEventListener(l[1], l[2], l[3]); });
+      listeners = [];
+      if (slMQ && !slMQ.addEventListener && slMQ.removeListener) slMQ.removeListener(slCheck);
+      if (rafId) cancelAnimationFrame(rafId);
+      if (fAnim) cancelAnimationFrame(fAnim);
+      if (swingRaf) cancelAnimationFrame(swingRaf);
+      if (fFlight) { try { fFlight.cancel(); } catch (e) {} }
+      if (slTimer) clearInterval(slTimer);
+      [capTimer, fCloseTimer, slNormTimer, tapScrollT].concat(timers).forEach(function (t) { if (t) clearTimeout(t); });
+      if (io) io.disconnect();
+      if (focus && focus.parentNode) focus.parentNode.removeChild(focus);
+    }
+
+    return { select: select, deselect: deselect, destroy: destroy };
+  }
+
+  /* ---------- registry ---------- */
+  function init(sec, opts) {
+    if (!sec || instances.has(sec)) return;
+    var inst = create(sec, opts);
+    if (inst) instances.set(sec, inst);
+  }
+  function destroy(sec) {
+    var inst = instances.get(sec);
+    if (inst) { inst.destroy(); instances.delete(sec); }
+  }
+  function initAll(root, opts) {
+    [].forEach.call((root || document).querySelectorAll('[data-sagar-section]'), function (sec) { init(sec, opts); });
+  }
+  function instFor(target) {
+    var sec = target && target.closest ? target.closest('[data-sagar-section]') : null;
+    return sec ? instances.get(sec) : null;
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { initAll(); });
+  else initAll();
+
+  // in the theme editor, re-renders after a setting change skip the drop-in
+  document.addEventListener('shopify:section:load', function (e) { initAll(e.target, { noDrop: true }); });
+  document.addEventListener('shopify:section:unload', function (e) {
+    [].forEach.call(e.target.querySelectorAll('[data-sagar-section]'), destroy);
+  });
+  document.addEventListener('shopify:block:select', function (e) {
+    var inst = instFor(e.target);
+    if (inst && e.detail) inst.select(e.detail.blockId);
+  });
+  document.addEventListener('shopify:block:deselect', function (e) {
+    var inst = instFor(e.target);
+    if (inst) inst.deselect();
+  });
+
+  window.RackShowcase = { init: init, destroy: destroy, initAll: initAll };
+})();
+</script>
+<section
+  id="sagar-template--27695055274289__rack_showcase_rWz8Dr"
+  class="sagar-sec"
+  data-sagar-section
+  data-hover-speed="850"
+  data-hover-gap="18"
+  data-turn-speed="700"
+  data-slide-interval="3000"
+  data-swing="85"
+  data-drop="true"
+  data-lift="true"
+  data-qa-redirect="false"
+  style="
+    --sagar-bg: #ffffff;
+    --sagar-txt: #2b2b28;
+    --sagar-acc: #000000;
+    --sagar-focus-bg: rgba(255, 255, 255, 0.96);
+    --sagar-hspd: 850ms;
+    --sagar-hgap: 18px;
+    --sagar-gap: 10px;
+    --sagar-h-desk: 420px;
+    --sagar-h-mob: 265px;
+    --sagar-h-slide: 280px;
+    --sagar-h-focus: 966px;
+    --sagar-h-focus-m: 672px;
+    --sagar-pt: 76px;
+    --sagar-pb: 120px;
+  "
+>
+  <noscript>
+    <style>
+      .sagar-sec.sagar-pre .sagar-item {
+        opacity: 1 !important;
+      }
+    </style>
+  </noscript>
+
+  <div class="sagar-wrap">
+
+    <!-- Section Header -->
+    <div class="sagar-railcap sagar-font-heading">
+      <span>NEW COLLECTION</span>
+      <span class="sagar-railcap-sep" aria-hidden="true"></span>
+      <span class="sagar-railcap-dim">PREMIUM STREETWEAR</span>
+    </div>
+
+    <!-- Product Showcase -->
+    <div class="sagar-stage">
+
+      <!-- Rack Rod Image -->
+      <div class="sagar-rod" aria-hidden="true">
+        <img
+          class="sagar-rod-photo"
+          src="https://static.joonsite.com/storage/42826/media/2610071101546924.webp"
+          alt=""
+          loading="eager"
+          decoding="async"
+        >
+      </div>
+
+      <!-- Products Rack -->
+      <div class="sagar-rack" data-sagar-rack style="--sagar-h: 310.2px;">
+
+        <!-- Product 1: Hoodie Black -->
+        <div
+          class="sagar-item"
+          data-sagar-item
+          role="button"
+          tabindex="0"
+          aria-label="Hoodie Black"
+          data-block-id="product_rdheyw"
+          data-name="Hoodie Black"
+          data-price="$199.00"
+          data-btn-label="View in the shop"
+          data-btn-url="/products/hoodie-black"
+          data-btn-target="_self"
+          data-idx="1"
+          style="width: 92px; --sagar-sw: 0deg; --sagar-p: 0;"
+        >
+          <div class="sagar-garment">
+
+            <div class="sagar-view" data-sagar-pos="0" style="opacity: 1;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071101516777.webp?height=840&amp;v=1792065529"
+                width="431"
+                height="1508"
+                alt="Hoodie Black - side"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="1" style="opacity: 0;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071101472773.webp?height=840&amp;v=1792065527"
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071101472773.webp?height=1400&amp;v=1792065527"
+                width="1125"
+                height="1508"
+                alt="Hoodie Black - front"
+                loading="eager"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="-1" style="opacity: 0;">
+              <img
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071101430110.webp?height=1400&amp;v=1792065524"
+                width="1128"
+                height="1508"
+                alt="Hoodie Black - back"
+                decoding="async"
+              >
+            </div>
+
+          </div>
+
+          <div class="sagar-tag sagar-tag-single" aria-hidden="true">
+            <div class="sagar-tag-inner">
+              <span class="sagar-tag-face sagar-tag-front">$199</span>
+            </div>
+          </div>
+
+          <script type="application/json" data-sagar-json>
+          {
+            "options": [
+              {
+                "name": "Size",
+                "values": ["S", "L", "M", "XL"]
+              }
+            ],
+            "variants": [
+              {"id": 56836251681073, "av": true, "price": "$199.00", "opts": ["S"]},
+              {"id": 56836251713841, "av": true, "price": "$199.00", "opts": ["L"]},
+              {"id": 56836251746609, "av": true, "price": "$199.00", "opts": ["M"]},
+              {"id": 56836251779377, "av": true, "price": "$199.00", "opts": ["XL"]}
+            ]
+          }
+          </script>
+        </div>
+
+        <!-- Product 2: Blazzer -->
+        <div
+          class="sagar-item"
+          data-sagar-item
+          role="button"
+          tabindex="0"
+          aria-label="Blazzer"
+          data-block-id="product_dUTTHW"
+          data-name="Blazzer"
+          data-price="$199.00"
+          data-btn-label="View in the shop"
+          data-btn-url="/products/blazzer"
+          data-btn-target="_self"
+          data-idx="2"
+          style="width: 113px; --sagar-sw: 0deg; --sagar-p: 0;"
+        >
+          <div class="sagar-garment">
+
+            <div class="sagar-view" data-sagar-pos="0" style="opacity: 1;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071515248388.webp?height=840&amp;v=1792065611"
+                width="525"
+                height="1500"
+                alt="Blazzer - side"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="1" style="opacity: 0;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071514560224.webp?height=840&amp;v=1792065608"
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071514560224.webp?height=1400&amp;v=1792065608"
+                width="923"
+                height="1500"
+                alt="Blazzer - front"
+                loading="eager"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="-1" style="opacity: 0;">
+              <img
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071514492742.webp?height=1400&amp;v=1792065606"
+                width="956"
+                height="1500"
+                alt="Blazzer - back"
+                decoding="async"
+              >
+            </div>
+
+          </div>
+
+          <div class="sagar-tag sagar-tag-single" aria-hidden="true">
+            <div class="sagar-tag-inner">
+              <span class="sagar-tag-face sagar-tag-front">$199</span>
+            </div>
+          </div>
+
+          <script type="application/json" data-sagar-json>
+          {
+            "options": [
+              {
+                "name": "Size",
+                "values": ["S", "L", "M", "XL"]
+              }
+            ],
+            "variants": [
+              {"id": 56835765993777, "av": true, "price": "$199.00", "opts": ["S"]},
+              {"id": 56835766026545, "av": true, "price": "$199.00", "opts": ["L"]},
+              {"id": 56835766059313, "av": true, "price": "$199.00", "opts": ["M"]},
+              {"id": 56835766092081, "av": true, "price": "$199.00", "opts": ["XL"]}
+            ]
+          }
+          </script>
+        </div>
+
+        <!-- Product 3: Hoodie -->
+        <div
+          class="sagar-item"
+          data-sagar-item
+          role="button"
+          tabindex="0"
+          aria-label="Hoodie"
+          data-block-id="product_gNH3aw"
+          data-name="Hoodie"
+          data-price="$199.00"
+          data-btn-label="View in the shop"
+          data-btn-url="/products/hoodie"
+          data-btn-target="_self"
+          data-idx="3"
+          style="width: 99px; --sagar-sw: 0deg; --sagar-p: 0;"
+        >
+          <div class="sagar-garment">
+
+            <div class="sagar-view" data-sagar-pos="0" style="opacity: 1;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071514447647.webp?height=840&amp;v=1792065701"
+                width="459"
+                height="1500"
+                alt="Hoodie - side"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="1" style="opacity: 0;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071514403809.webp?height=840&amp;v=1792065704"
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071514403809.webp?height=1400&amp;v=1792065704"
+                width="1082"
+                height="1500"
+                alt="Hoodie - front"
+                loading="eager"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="-1" style="opacity: 0;">
+              <img
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071514388245.webp?height=1400&amp;v=1792065705"
+                width="1084"
+                height="1500"
+                alt="Hoodie - back"
+                decoding="async"
+              >
+            </div>
+
+          </div>
+
+          <div class="sagar-tag sagar-tag-single" aria-hidden="true">
+            <div class="sagar-tag-inner">
+              <span class="sagar-tag-face sagar-tag-front">$199</span>
+            </div>
+          </div>
+
+          <script type="application/json" data-sagar-json>
+          {
+            "options": [
+              {
+                "name": "Size",
+                "values": ["S", "L", "M", "XL"]
+              }
+            ],
+            "variants": [
+              {"id": 56836002185521, "av": true, "price": "$199.00", "opts": ["S"]},
+              {"id": 56836002218289, "av": true, "price": "$199.00", "opts": ["L"]},
+              {"id": 56836002251057, "av": true, "price": "$199.00", "opts": ["M"]},
+              {"id": 56836002283825, "av": true, "price": "$199.00", "opts": ["XL"]}
+            ]
+          }
+          </script>
+        </div>
+
+        <!-- Product 4: Sweatshirt -->
+        <div
+          class="sagar-item"
+          data-sagar-item
+          role="button"
+          tabindex="0"
+          aria-label="Sweatshirt"
+          data-block-id="product_y6Vzq9"
+          data-name="Sweatshirt"
+          data-price="$199.00"
+          data-btn-label="View in the shop"
+          data-btn-url="/products/sweatshirt"
+          data-btn-target="_self"
+          data-idx="4"
+          style="width: 82px; --sagar-sw: 0deg;"
+        >
+          <div class="sagar-garment">
+
+            <div class="sagar-view" data-sagar-pos="0" style="opacity: 1;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071517384792.webp?height=840&amp;v=1792066083"
+                width="383"
+                height="1500"
+                alt="Sweatshirt - side"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="1" style="opacity: 0;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071517318112.webp?height=840&amp;v=1792066085"
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071517318112.webp?height=1400&amp;v=1792066085"
+                width="1033"
+                height="1500"
+                alt="Sweatshirt - front"
+                loading="eager"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="-1" style="opacity: 0;">
+              <img
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071517292954.webp?height=1400&amp;v=1792066088"
+                width="1035"
+                height="1500"
+                alt="Sweatshirt - back"
+                decoding="async"
+              >
+            </div>
+
+          </div>
+
+          <div class="sagar-tag sagar-tag-single" aria-hidden="true">
+            <div class="sagar-tag-inner">
+              <span class="sagar-tag-face sagar-tag-front">$199</span>
+            </div>
+          </div>
+
+          <script type="application/json" data-sagar-json>
+          {
+            "options": [
+              {
+                "name": "Size",
+                "values": ["S", "L", "M", "XL"]
+              }
+            ],
+            "variants": [
+              {"id": 56835806396721, "av": true, "price": "$199.00", "opts": ["S"]},
+              {"id": 56835806429489, "av": true, "price": "$199.00", "opts": ["L"]},
+              {"id": 56835806462257, "av": true, "price": "$199.00", "opts": ["M"]},
+              {"id": 56835806495025, "av": true, "price": "$199.00", "opts": ["XL"]}
+            ]
+          }
+          </script>
+        </div>
+
+        <!-- Product 5: Sweatshirt Plus -->
+        <div
+          class="sagar-item"
+          data-sagar-item
+          role="button"
+          tabindex="0"
+          aria-label="Sweatshirt Plus"
+          data-block-id="product_Wck3WB"
+          data-name="Sweatshirt Plus"
+          data-price="$199.00"
+          data-btn-label="View in the shop"
+          data-btn-url="/products/sweatshirt-plus"
+          data-btn-target="_self"
+          data-idx="5"
+          style="width: 108px; --sagar-sw: 0deg;"
+        >
+          <div class="sagar-garment">
+
+            <div class="sagar-view" data-sagar-pos="0" style="opacity: 1;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071517049148.webp?height=840&amp;v=1792066000"
+                width="501"
+                height="1500"
+                alt="Sweatshirt Plus - side"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="1" style="opacity: 0;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071516592552.webp?height=840&amp;v=1792065999"
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071516592552.webp?height=1400&amp;v=1792065999"
+                width="984"
+                height="1500"
+                alt="Sweatshirt Plus - front"
+                loading="eager"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="-1" style="opacity: 0;">
+              <img
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071517017451.webp?height=1400&amp;v=1792065997"
+                width="1067"
+                height="1500"
+                alt="Sweatshirt Plus - back"
+                decoding="async"
+              >
+            </div>
+
+          </div>
+
+          <div class="sagar-tag sagar-tag-single" aria-hidden="true">
+            <div class="sagar-tag-inner">
+              <span class="sagar-tag-face sagar-tag-front">$199</span>
+            </div>
+          </div>
+
+          <script type="application/json" data-sagar-json>
+          {
+            "options": [
+              {
+                "name": "Size",
+                "values": ["S", "L", "M", "XL"]
+              }
+            ],
+            "variants": [
+              {"id": 56836143743281, "av": true, "price": "$199.00", "opts": ["S"]},
+              {"id": 56836143776049, "av": true, "price": "$199.00", "opts": ["L"]},
+              {"id": 56836143808817, "av": true, "price": "$199.00", "opts": ["M"]},
+              {"id": 56836143841585, "av": true, "price": "$199.00", "opts": ["XL"]}
+            ]
+          }
+          </script>
+        </div>
+
+        <!-- Product 6: Tshirt -->
+        <div
+          class="sagar-item"
+          data-sagar-item
+          role="button"
+          tabindex="0"
+          aria-label="Tshirt"
+          data-block-id="product_D3fwk3"
+          data-name="Tshirt"
+          data-price="$199.00"
+          data-btn-label="View in the shop"
+          data-btn-url="/products/tshirt"
+          data-btn-target="_self"
+          data-idx="6"
+          style="width: 85px; --sagar-sw: 0deg;"
+        >
+          <div class="sagar-garment">
+
+            <div class="sagar-view" data-sagar-pos="0" style="opacity: 1;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071516549024.webp?height=840&amp;v=1792065933"
+                width="396"
+                height="1500"
+                alt="Tshirt - side"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="1" style="opacity: 0;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071515314737.webp?height=840&amp;v=1792065932"
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071515314737.webp?height=1400&amp;v=1792065932"
+                width="1066"
+                height="1500"
+                alt="Tshirt - front"
+                loading="eager"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="-1" style="opacity: 0;">
+              <img
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071515554298.webp?height=1400&amp;v=1792065930"
+                width="1077"
+                height="1500"
+                alt="Tshirt - back"
+                decoding="async"
+              >
+            </div>
+
+          </div>
+
+          <div class="sagar-tag sagar-tag-single" aria-hidden="true">
+            <div class="sagar-tag-inner">
+              <span class="sagar-tag-face sagar-tag-front">$199</span>
+            </div>
+          </div>
+
+          <script type="application/json" data-sagar-json>
+          {
+            "options": [
+              {
+                "name": "Size",
+                "values": ["S", "L", "M", "XL"]
+              }
+            ],
+            "variants": [
+              {"id": 56835911582001, "av": true, "price": "$199.00", "opts": ["S"]},
+              {"id": 56835911614769, "av": true, "price": "$199.00", "opts": ["L"]},
+              {"id": 56835911647537, "av": true, "price": "$199.00", "opts": ["M"]},
+              {"id": 56835911680305, "av": true, "price": "$199.00", "opts": ["XL"]}
+            ]
+          }
+          </script>
+        </div>
+
+        <!-- Product 7: Hoodie Black -->
+        <div
+          class="sagar-item"
+          data-sagar-item
+          role="button"
+          tabindex="0"
+          aria-label="Hoodie Black"
+          data-block-id="product_Ggk44g"
+          data-name="Hoodie Black"
+          data-price="$199.00"
+          data-btn-label="View in the shop"
+          data-btn-url="/products/hoodie-black"
+          data-btn-target="_self"
+          data-idx="7"
+          style="width: 92px; --sagar-sw: 0deg;"
+        >
+          <div class="sagar-garment">
+
+            <div class="sagar-view" data-sagar-pos="0" style="opacity: 1;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071101516777.webp?height=840&amp;v=1792065529"
+                width="431"
+                height="1508"
+                alt="Hoodie Black - side"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="1" style="opacity: 0;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071101472773.webp?height=840&amp;v=1792065527"
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071101472773.webp?height=1400&amp;v=1792065527"
+                width="1125"
+                height="1508"
+                alt="Hoodie Black - front"
+                loading="eager"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="-1" style="opacity: 0;">
+              <img
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071101430110.webp?height=1400&amp;v=1792065524"
+                width="1128"
+                height="1508"
+                alt="Hoodie Black - back"
+                decoding="async"
+              >
+            </div>
+
+          </div>
+
+          <div class="sagar-tag sagar-tag-single" aria-hidden="true">
+            <div class="sagar-tag-inner">
+              <span class="sagar-tag-face sagar-tag-front">$199</span>
+            </div>
+          </div>
+
+          <script type="application/json" data-sagar-json>
+          {
+            "options": [
+              {
+                "name": "Size",
+                "values": ["S", "L", "M", "XL"]
+              }
+            ],
+            "variants": [
+              {"id": 56836251681073, "av": true, "price": "$199.00", "opts": ["S"]},
+              {"id": 56836251713841, "av": true, "price": "$199.00", "opts": ["L"]},
+              {"id": 56836251746609, "av": true, "price": "$199.00", "opts": ["M"]},
+              {"id": 56836251779377, "av": true, "price": "$199.00", "opts": ["XL"]}
+            ]
+          }
+          </script>
+        </div>
+
+        <!-- Product 8: Hoodie -->
+        <div
+          class="sagar-item"
+          data-sagar-item
+          role="button"
+          tabindex="0"
+          aria-label="Hoodie"
+          data-block-id="product_C7JaGQ"
+          data-name="Hoodie"
+          data-price="$199.00"
+          data-btn-label="View in the shop"
+          data-btn-url="/products/hoodie"
+          data-btn-target="_self"
+          data-idx="8"
+          style="width: 99px; --sagar-sw: 0deg;"
+        >
+          <div class="sagar-garment">
+
+            <div class="sagar-view" data-sagar-pos="0" style="opacity: 1;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071514447647.webp?height=840&amp;v=1792065701"
+                width="459"
+                height="1500"
+                alt="Hoodie - side"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="1" style="opacity: 0;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071514403809.webp?height=840&amp;v=1792065704"
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071514403809.webp?height=1400&amp;v=1792065704"
+                width="1082"
+                height="1500"
+                alt="Hoodie - front"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="-1" style="opacity: 0;">
+              <img
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071514388245.webp?height=1400&amp;v=1792065705"
+                width="1084"
+                height="1500"
+                alt="Hoodie - back"
+                decoding="async"
+              >
+            </div>
+
+          </div>
+
+          <div class="sagar-tag sagar-tag-single" aria-hidden="true">
+            <div class="sagar-tag-inner">
+              <span class="sagar-tag-face sagar-tag-front">$199</span>
+            </div>
+          </div>
+
+          <script type="application/json" data-sagar-json>
+          {
+            "options": [
+              {
+                "name": "Size",
+                "values": ["S", "L", "M", "XL"]
+              }
+            ],
+            "variants": [
+              {"id": 56836002185521, "av": true, "price": "$199.00", "opts": ["S"]},
+              {"id": 56836002218289, "av": true, "price": "$199.00", "opts": ["L"]},
+              {"id": 56836002251057, "av": true, "price": "$199.00", "opts": ["M"]},
+              {"id": 56836002283825, "av": true, "price": "$199.00", "opts": ["XL"]}
+            ]
+          }
+          </script>
+        </div>
+
+        <!-- Product 9: Sweatshirt -->
+        <div
+          class="sagar-item"
+          data-sagar-item
+          role="button"
+          tabindex="0"
+          aria-label="Sweatshirt"
+          data-block-id="product_6PWWJD"
+          data-name="Sweatshirt"
+          data-price="$199.00"
+          data-btn-label="View in the shop"
+          data-btn-url="/products/sweatshirt"
+          data-btn-target="_self"
+          data-idx="9"
+          style="width: 82px; --sagar-sw: 0deg;"
+        >
+          <div class="sagar-garment">
+
+            <div class="sagar-view" data-sagar-pos="0" style="opacity: 1;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071517384792.webp?height=840&amp;v=1792066083"
+                width="383"
+                height="1500"
+                alt="Sweatshirt - side"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="1" style="opacity: 0;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071517318112.webp?height=840&amp;v=1792066085"
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071517318112.webp?height=1400&amp;v=1792066085"
+                width="1033"
+                height="1500"
+                alt="Sweatshirt - front"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="-1" style="opacity: 0;">
+              <img
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071517292954.webp?height=1400&amp;v=1792066088"
+                width="1035"
+                height="1500"
+                alt="Sweatshirt - back"
+                decoding="async"
+              >
+            </div>
+
+          </div>
+
+          <div class="sagar-tag sagar-tag-single" aria-hidden="true">
+            <div class="sagar-tag-inner">
+              <span class="sagar-tag-face sagar-tag-front">$199</span>
+            </div>
+          </div>
+
+          <script type="application/json" data-sagar-json>
+          {
+            "options": [
+              {
+                "name": "Size",
+                "values": ["S", "L", "M", "XL"]
+              }
+            ],
+            "variants": [
+              {"id": 56835806396721, "av": true, "price": "$199.00", "opts": ["S"]},
+              {"id": 56835806429489, "av": true, "price": "$199.00", "opts": ["L"]},
+              {"id": 56835806462257, "av": true, "price": "$199.00", "opts": ["M"]},
+              {"id": 56835806495025, "av": true, "price": "$199.00", "opts": ["XL"]}
+            ]
+          }
+          </script>
+        </div>
+
+        <!-- Product 10: Sweatshirt Plus -->
+        <div
+          class="sagar-item"
+          data-sagar-item
+          role="button"
+          tabindex="0"
+          aria-label="Sweatshirt Plus"
+          data-block-id="product_tGP8fQ"
+          data-name="Sweatshirt Plus"
+          data-price="$199.00"
+          data-btn-label="View in the shop"
+          data-btn-url="/products/sweatshirt-plus"
+          data-btn-target="_self"
+          data-idx="10"
+          style="width: 108px; --sagar-sw: 0deg;"
+        >
+          <div class="sagar-garment">
+
+            <div class="sagar-view" data-sagar-pos="0" style="opacity: 1;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071517049148.webp?height=840&amp;v=1792066000"
+                width="501"
+                height="1500"
+                alt="Sweatshirt Plus - side"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="1" style="opacity: 0;">
+              <img
+                src="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071516592552.webp?height=840&amp;v=1792065999"
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071516592552.webp?height=1400&amp;v=1792065999"
+                width="984"
+                height="1500"
+                alt="Sweatshirt Plus - front"
+                decoding="async"
+              >
+            </div>
+
+            <div class="sagar-view" data-sagar-pos="-1" style="opacity: 0;">
+              <img
+                data-hi="//nike-makknzjs.myshopify.com/cdn/shop/files/2610071517017451.webp?height=1400&amp;v=1792065997"
+                width="1067"
+                height="1500"
+                alt="Sweatshirt Plus - back"
+                decoding="async"
+              >
+            </div>
+
+          </div>
+
+          <div class="sagar-tag sagar-tag-single" aria-hidden="true">
+            <div class="sagar-tag-inner">
+              <span class="sagar-tag-face sagar-tag-front">$199</span>
+            </div>
+          </div>
+
+          <script type="application/json" data-sagar-json>
+          {
+            "options": [
+              {
+                "name": "Size",
+                "values": ["S", "L", "M", "XL"]
+              }
+            ],
+            "variants": [
+              {"id": 56836143743281, "av": true, "price": "$199.00", "opts": ["S"]},
+              {"id": 56836143776049, "av": true, "price": "$199.00", "opts": ["L"]},
+              {"id": 56836143808817, "av": true, "price": "$199.00", "opts": ["M"]},
+              {"id": 56836143841585, "av": true, "price": "$199.00", "opts": ["XL"]}
+            ]
+          }
+          </script>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Navigation Dots -->
+    <div class="sagar-dots" data-sagar-dots></div>
+
+    <!-- Caption and Button -->
+    <div class="sagar-caption">
+
+      <div
+        class="sagar-cap-name sagar-font-body"
+        data-sagar-caption
+        aria-live="polite"
+      >
+        Crafted in heavyweight fleece. Cut oversized. Made to last.
+      </div>
+
+      <div
+        class="sagar-cta-w"
+        style="
+          --b-pbg: #f4f1ec;
+          --b-ptx: #2b2b28;
+          --b-phbg: #2b2b28;
+          --b-phtx: #f4f1ec;
+          --b-scol: #2b2b28;
+          --b-shbg: #2b2b28;
+          --b-shtx: #f4f1ec;
+          --b-rad: 30px;
+          --b-mt: 18px;
+          --b-mb: 0px;
+          --b-mtm: 14px;
+          --b-mbm: 0px;
+        "
+      >
+        <a class="sagar-cta sagar-cta-primary" href="/collections/all">
+          <span>Shop the Collection</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
