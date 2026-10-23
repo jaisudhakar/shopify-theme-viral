@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+# Copy the shared section CSS/JS from the HTML site into the Shopify theme folder.
+# html/assets is the source of truth; run this after editing any of these files.
+set -e
+cd "$(dirname "$0")/.."
+for f in site-cart.js quick-view.js quick-view.css \
+         rack-showcase.js rack-showcase.css \
+         hang-rail.js hang-rail.css \
+         nike-orbit.js nike-orbit.css \
+         obsessed.js obsessed.css; do
+  cp "html/assets/$f" "shopify/assets/$f"
+done
+echo "Synced $(ls shopify/assets | wc -l | tr -d ' ') files to shopify/assets"

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b2d42"/><stop offset="1" stop-color="#8d99ae"/></linearGradient><filter id="b"><feGaussianBlur stdDeviation="40"/></filter></defs>
+<rect width="800" height="800" fill="url(#g)"/>
+<circle cx="470" cy="380" r="220" fill="#ef233c" opacity=".55" filter="url(#b)"/>
+<circle cx="440" cy="470" r="180" fill="#fff" opacity=".25" filter="url(#b)"/>
+<text x="400" y="420" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="600" fill="#fff" opacity=".85">Lifestyle photo 3</text>
+</svg>

@@ -1,68 +1,65 @@
-# Shopify Storefront — Next.js
+# Nike store — homepage sections (HTML + Shopify)
 
-A headless storefront for the `nike-makknzjs.myshopify.com` Shopify store, built with
-**Next.js 16 (App Router)**, **React 19**, **Tailwind CSS 4** and **Motion** (Framer Motion) for animations.
+The homepage from `reference/site-walkthrough.mp4`, built twice from the same CSS/JS:
 
-It runs on a placeholder catalog out of the box and switches to the live Shopify products as soon as a
-Storefront API token is added.
+| Folder | What it is |
+| --- | --- |
+| `html/` | Static site. Open `html/index.html` in a browser, no build step. |
+| `shopify/` | Theme sections, snippet and assets to add to your Shopify theme. |
+| `reference/` | The shared `trial.html` rack section and the screen recording. |
 
-## Quick start
+## Sections
+
+1. **Header** (HTML version only, Shopify uses your theme's header): Find a Store · Help · Join Us · Sign In bar, logo, Home / Nike Orbit / Hand Rail Pro / Contact, search, account, bag with count.
+2. **Rack showcase** (`rack-showcase`, from `trial.html`): garments drop onto the rod and swing, hover turns one to the front and changes the caption, click lifts it into a focus view (drag to turn, Front/Back, size + add to cart, image flies to the bag). Phones get an auto-sliding rail with dots.
+3. **Hang Rail Pro** (`hang-rail-pro`): garments drift along a sagging rail over a full-width photo. Hover turns a piece and pauses the rail (name + price bottom left), click opens Quick view, drag or swipe to scrub.
+4. **Nike Orbit** (`nike-orbit`): 7 sneakers on a big circle. Drag the shoes or the "Drag the wheel" dial, use arrow keys or scroll sideways. Name, price and "View details" on the left, size buttons bottom right add the front shoe to the bag ("… added to bag · View bag").
+5. **Quick view** (shared): image + thumbnails, ← 03 / 07 → to step through products, size grid, "Select a size" → "Add to bag", "View full details".
+6. **Obsessed** (`obsessed`): heading, text and an endless photo strip.
+
+## Run the HTML version
+
+Double-click `html/index.html`, or serve the folder:
 
 ```bash
-npm install
-npm run dev        # http://localhost:3000
-npm run build && npm start   # production
+cd html
+python3 -m http.server 8000   # then open http://localhost:8000
 ```
 
-## Connect the real Shopify products
+The bag works in the browser (kept in localStorage). Checkout only exists on the Shopify store.
+The garment photos load from `https://nike-makknzjs.myshopify.com/cdn/...`, so you need to be online.
 
-1. In Shopify admin go to **Settings → Apps and sales channels → Develop apps** (or install the
-   **Headless** channel) and create a **Storefront API access token** with product and cart read/write scopes.
-2. Copy `.env.example` to `.env.local` and fill it in:
+### Replace the placeholder images
 
-   ```env
-   SHOPIFY_STORE_DOMAIN=nike-makknzjs.myshopify.com
-   SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-token
-   SHOPIFY_API_VERSION=2025-10
-   ```
+The shoes, the Hang Rail Pro landscape, the Obsessed photos and the logo are placeholders in `html/assets/img/`:
 
-3. Restart the dev server. Products, photos, prices, sizes and colours now come from Shopify
-   (`lib/shopify.ts`), and the bag's **Checkout** button creates a real Shopify cart and redirects to checkout.
-
-Product mapping notes:
-
-- **Category** (Men / Women / Kids) is derived from the product type, tags or title.
-- **Colours** come from a `Color`/`Colour` option (swatch colours are used when set in Shopify).
-- **Sizes** come from a `Size` option.
-- Tags `new` / `bestseller` and compare-at prices drive the badges.
-
-## Pages
-
-| Route | Description |
+| Placeholder | Replace with |
 | --- | --- |
-| `/` | Home: animated hero, marquees, new arrivals, category tiles, scroll-linked text, horizontal "Trending" showcase, counters, spotlight, newsletter |
-| `/collections/[all\|men\|women\|kids]` | Product grid with search (`?q=`), price and sale filters, sorting, collapsible filter sidebar |
-| `/products/[handle]` | Product page: gallery, colour switcher, size picker, add to bag, accordions, related products |
-| `/api/checkout` | Creates a Shopify cart and returns its checkout URL |
+| `img/shoes/shoe-01.svg` … `shoe-07.svg` | Shoe photos (transparent PNG/WebP, side view). Update the `"images"` paths in the `data-orbit-json` block in `index.html`; add up to 5 images per shoe for the Quick view thumbnails. |
+| `img/hang-rail-bg.svg` | The landscape photo, set in `<div class="hr-bg" style="background-image: …">`. |
+| `img/lifestyle/photo-1.svg` … `photo-4.svg` | Lifestyle photos in the `.obs-strip` (both `.obs-set` copies). |
+| `img/logo.svg` | Your logo. |
 
-## Animations
+Shoe names, prices and sizes live in the `data-orbit-json` block; garments for Hang Rail Pro in `data-hr-json`; the rack markup is the same as `trial.html`.
 
-- Hero: staggered headline reveal, mouse-driven 3D tilt, scroll parallax, colourway switcher that
-  slides the shoe out/in and morphs the background
-- Header hides on scroll down, reappears on scroll up; badge pops when the bag count changes
-- Rotating announcement bar, infinite marquees (solid and outlined)
-- Product cards: hover lift/rotate, quick-add size picker slides up, live colour swatches
-- Category tiles: hover zoom, rotate and moving background type
-- Scroll-linked word-by-word text reveal
-- Sticky section that scrolls the "Trending" cards horizontally with a progress bar
-- Count-up stats, spinning "Limited drop" badge, parallax spotlight
-- Cart drawer: spring slide-in, animated free-delivery progress bar, line items animate in/out
-- Product page: animated gallery transitions, shake on missing size, "Added" button state
-- Respects `prefers-reduced-motion`
+## Install the Shopify version
 
-## Customising
+1. Copy the files into your theme (Online Store → Themes → ⋯ → Edit code, or `shopify theme push`):
+   - `shopify/sections/*.liquid` → `sections/`
+   - `shopify/snippets/site-product-json.liquid` → `snippets/`
+   - `shopify/assets/*` → `assets/`
+2. In the theme editor, **Add section** → *Rack showcase*, *Hang Rail Pro*, *Nike Orbit*, *Obsessed*.
+3. Pick a product for each block. Images default to the product's media:
+   - Rack / Hang Rail: image 1 = side (hanger at top, transparent), 2 = front, 3 = back. Each block also has image overrides.
+   - Nike Orbit: the first 5 product images (or the block's Image 1–5).
+4. Add to cart posts to `/cart/add.js`, updates the theme's `#cart-icon-bubble` and publishes Dawn's `cartUpdate` event, so cart drawers on Dawn-based themes refresh.
 
-- `lib/site.ts`: brand name, tagline, announcements, nav, home-page stats, categories
-- `lib/products.ts`: placeholder catalog (used when Shopify isn't connected)
-- `app/globals.css`: colour tokens and fonts
-- `components/ShoeArt.tsx`: vector shoe drawn when a product has no photos
+## Editing the shared code
+
+`html/assets/` is the source of truth for the section CSS/JS. After changing a file there, copy it to the theme folder:
+
+```bash
+./scripts/sync-shopify-assets.sh
+```
+
+`site.css` and `site.js` (header, bag drawer, footer) are HTML-only.
