@@ -3,62 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nike — New Collection</title>
+  <title>Nike — New collection, Nike Orbit &amp; Hang Rail Pro</title>
   <meta name="description" content="New collection: premium streetwear on the rail and the Nike Orbit sneaker wheel.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <script>document.documentElement.classList.add('motion-ready');</script>
+  <link rel="stylesheet" href="assets/base.css">
   <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/motion.css">
+  <link rel="stylesheet" href="assets/hero.css">
+  <link rel="stylesheet" href="assets/sections.css">
+  <link rel="stylesheet" href="assets/product-grid.css">
   <link rel="stylesheet" href="assets/rack-showcase.css">
   <link rel="stylesheet" href="assets/hang-rail.css">
   <link rel="stylesheet" href="assets/nike-orbit.css">
   <link rel="stylesheet" href="assets/obsessed.css">
   <link rel="stylesheet" href="assets/quick-view.css">
 </head>
-<body id="top">
+<body id="top" data-preloader class="sx">
 
-  <!-- ===================== HEADER ===================== -->
-  <div class="util-bar">
-    <ul>
-      <li><a href="https://nike-makknzjs.myshopify.com/pages/stores">Find a Store</a></li>
-      <li><a href="#contact">Help</a></li>
-      <li><a href="https://nike-makknzjs.myshopify.com/account/register">Join Us</a></li>
-      <li><a href="https://nike-makknzjs.myshopify.com/account/login">Sign In</a></li>
-    </ul>
-  </div>
-  <header class="site-header">
-    <div class="site-header-in">
-      <a class="site-logo" href="#top" aria-label="Home"><img src="assets/img/logo.svg" alt="" width="72" height="24"></a>
-      <nav class="site-nav" aria-label="Main">
-        <a href="#top" aria-current="page">Home</a>
-        <a href="#nike-orbit">Nike Orbit</a>
-        <a href="#hang-rail-pro">Hand Rail Pro</a>
-        <a href="#contact">Contact</a>
-      </nav>
-      <div class="site-tools">
-        <form class="site-search" role="search" data-site-search>
-          <button type="submit" class="icon-btn" aria-label="Search" style="width:24px;height:24px">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10.5" cy="12.5" r="6"/><path d="m19 21-4.2-4.2"/><path d="M18 2.5v4M16 4.5h4" stroke-width="1.4"/></svg>
-          </button>
-          <label class="visually-hidden" for="site-q">Search</label>
-          <input id="site-q" type="search" placeholder="Search" autocomplete="off">
-        </form>
-        <a class="icon-btn" href="https://nike-makknzjs.myshopify.com/account" aria-label="Account">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.4 7-5.4s6.2 1.8 7 5.4"/></svg>
-        </a>
-        <a class="icon-btn" href="#cart" data-cart-icon aria-label="Bag">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
-          <span class="cart-count" data-cart-count hidden>0</span>
-        </a>
-        <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-label="Menu">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-        </button>
+  <div data-site-header></div>
+  <script src="assets/brand.js"></script>
+  <script src="assets/site.js"></script>
+
+  <main id="main">
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero" data-hero aria-label="Introduction">
+    <div class="hero-bg" aria-hidden="true"><span class="hero-blob b1"></span><span class="hero-blob b2"></span></div>
+    <div class="hero-word" aria-hidden="true">MOVE</div>
+    <div class="hero-in">
+      <div class="hero-copy">
+        <p class="eyebrow" data-reveal>New collection · Premium streetwear</p>
+        <h1 class="display hero-title" data-split>Made for the <em>everyday</em> athlete.</h1>
+        <p class="lead" data-reveal style="--rd:.45s">Heavyweight fleece, clean cuts and sneakers built to keep up. Explore the new drop — on the rail, on the wheel, in the shop.</p>
+        <div class="hero-ctas" data-reveal style="--rd:.6s">
+          <a class="btn btn-dark" href="shop.html" data-magnetic>Shop the collection <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="link-arrow" href="index.html#nike-orbit">Explore Nike Orbit <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="hero-layer" data-depth="0.5"><figure class="hero-card c1" style="--tone:#ebe5d9"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071517318112.webp?height=1400&amp;v=1792066085" alt="" decoding="async"></figure></div>
+        <div class="hero-layer" data-depth="1"><figure class="hero-card c2" style="--tone:#dfe7df"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071516592552.webp?height=1400&amp;v=1792065999" alt="" decoding="async" fetchpriority="high"></figure></div>
+        <div class="hero-layer" data-depth="0.3"><figure class="hero-card c3" style="--tone:#e4e4e2"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071101472773.webp?height=1400&amp;v=1792065527" alt="" decoding="async"></figure></div>
+        <div class="hero-layer" data-depth="1.4">
+          <div class="hero-badge"><svg viewBox="0 0 100 100"><defs><path id="hero-circle" d="M50 50 m-37 0 a37 37 0 1 1 74 0 a37 37 0 1 1 -74 0"/></defs><text><textPath href="#hero-circle">New drop • New drop • New drop •</textPath></text></svg><b>★</b></div>
+        </div>
+        <div class="hero-layer" data-depth="1.2" style="pointer-events:none">
+          <a class="hero-chip" href="product.html?id=hoodie-black" style="pointer-events:auto" tabindex="-1"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071101472773.webp?height=1400&amp;v=1792065527" alt=""><span><strong>Hoodie Black</strong>$199.00</span><span class="dot"></span></a>
+        </div>
       </div>
     </div>
-  </header>
-  <div class="nav-scrim"></div>
+    <a class="hero-scroll" href="index.html#new-collection"><i></i><span>Scroll</span></a>
+  </section>
 
-  <main>
+  <!-- ===================== MARQUEE ===================== -->
+  <section class="mq" aria-label="Highlights" data-marquee></section>
 
   <!-- ===================== RACK SHOWCASE (from trial.html) ===================== -->
   <section
@@ -113,8 +114,8 @@
           data-block-id="product_rdheyw"
           data-name="Hoodie Black"
           data-price="$199.00"
-          data-btn-label="View in the shop"
-          data-btn-url="https://nike-makknzjs.myshopify.com/products/hoodie-black"
+          data-btn-label="View product"
+          data-btn-url="product.html?id=hoodie-black"
           data-btn-target="_self"
         >
           <div class="sagar-garment">
@@ -155,7 +156,7 @@
               <span class="sagar-tag-face sagar-tag-front">$199</span>
             </div>
           </div>
-          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "L", "M", "XL"]}], "variants": [{"id": 56836251681073, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56836251713841, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56836251746609, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56836251779377, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
+          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "M", "L", "XL"]}], "variants": [{"id": 56836251681073, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56836251713841, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56836251746609, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56836251779377, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
         </div>
         <div
           class="sagar-item"
@@ -166,8 +167,8 @@
           data-block-id="product_dUTTHW"
           data-name="Blazzer"
           data-price="$199.00"
-          data-btn-label="View in the shop"
-          data-btn-url="https://nike-makknzjs.myshopify.com/products/blazzer"
+          data-btn-label="View product"
+          data-btn-url="product.html?id=blazzer"
           data-btn-target="_self"
         >
           <div class="sagar-garment">
@@ -208,7 +209,7 @@
               <span class="sagar-tag-face sagar-tag-front">$199</span>
             </div>
           </div>
-          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "L", "M", "XL"]}], "variants": [{"id": 56835765993777, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56835766026545, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56835766059313, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56835766092081, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
+          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "M", "L", "XL"]}], "variants": [{"id": 56835765993777, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56835766026545, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56835766059313, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56835766092081, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
         </div>
         <div
           class="sagar-item"
@@ -219,8 +220,8 @@
           data-block-id="product_gNH3aw"
           data-name="Hoodie"
           data-price="$199.00"
-          data-btn-label="View in the shop"
-          data-btn-url="https://nike-makknzjs.myshopify.com/products/hoodie"
+          data-btn-label="View product"
+          data-btn-url="product.html?id=hoodie"
           data-btn-target="_self"
         >
           <div class="sagar-garment">
@@ -261,7 +262,7 @@
               <span class="sagar-tag-face sagar-tag-front">$199</span>
             </div>
           </div>
-          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "L", "M", "XL"]}], "variants": [{"id": 56836002185521, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56836002218289, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56836002251057, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56836002283825, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
+          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "M", "L", "XL"]}], "variants": [{"id": 56836002185521, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56836002218289, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56836002251057, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56836002283825, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
         </div>
         <div
           class="sagar-item"
@@ -272,8 +273,8 @@
           data-block-id="product_y6Vzq9"
           data-name="Sweatshirt"
           data-price="$199.00"
-          data-btn-label="View in the shop"
-          data-btn-url="https://nike-makknzjs.myshopify.com/products/sweatshirt"
+          data-btn-label="View product"
+          data-btn-url="product.html?id=sweatshirt"
           data-btn-target="_self"
         >
           <div class="sagar-garment">
@@ -314,7 +315,7 @@
               <span class="sagar-tag-face sagar-tag-front">$199</span>
             </div>
           </div>
-          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "L", "M", "XL"]}], "variants": [{"id": 56835806396721, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56835806429489, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56835806462257, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56835806495025, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
+          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "M", "L", "XL"]}], "variants": [{"id": 56835806396721, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56835806429489, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56835806462257, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56835806495025, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
         </div>
         <div
           class="sagar-item"
@@ -325,8 +326,8 @@
           data-block-id="product_Wck3WB"
           data-name="Sweatshirt Plus"
           data-price="$199.00"
-          data-btn-label="View in the shop"
-          data-btn-url="https://nike-makknzjs.myshopify.com/products/sweatshirt-plus"
+          data-btn-label="View product"
+          data-btn-url="product.html?id=sweatshirt-plus"
           data-btn-target="_self"
         >
           <div class="sagar-garment">
@@ -367,7 +368,7 @@
               <span class="sagar-tag-face sagar-tag-front">$199</span>
             </div>
           </div>
-          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "L", "M", "XL"]}], "variants": [{"id": 56836143743281, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56836143776049, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56836143808817, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56836143841585, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
+          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "M", "L", "XL"]}], "variants": [{"id": 56836143743281, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56836143776049, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56836143808817, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56836143841585, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
         </div>
         <div
           class="sagar-item"
@@ -378,8 +379,8 @@
           data-block-id="product_D3fwk3"
           data-name="Tshirt"
           data-price="$199.00"
-          data-btn-label="View in the shop"
-          data-btn-url="https://nike-makknzjs.myshopify.com/products/tshirt"
+          data-btn-label="View product"
+          data-btn-url="product.html?id=tshirt"
           data-btn-target="_self"
         >
           <div class="sagar-garment">
@@ -420,7 +421,7 @@
               <span class="sagar-tag-face sagar-tag-front">$199</span>
             </div>
           </div>
-          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "L", "M", "XL"]}], "variants": [{"id": 56835911582001, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56835911614769, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56835911647537, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56835911680305, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
+          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "M", "L", "XL"]}], "variants": [{"id": 56835911582001, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56835911614769, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56835911647537, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56835911680305, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
         </div>
         <div
           class="sagar-item"
@@ -431,8 +432,8 @@
           data-block-id="product_Ggk44g"
           data-name="Hoodie Black"
           data-price="$199.00"
-          data-btn-label="View in the shop"
-          data-btn-url="https://nike-makknzjs.myshopify.com/products/hoodie-black"
+          data-btn-label="View product"
+          data-btn-url="product.html?id=hoodie-black"
           data-btn-target="_self"
         >
           <div class="sagar-garment">
@@ -472,7 +473,7 @@
               <span class="sagar-tag-face sagar-tag-front">$199</span>
             </div>
           </div>
-          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "L", "M", "XL"]}], "variants": [{"id": 56836251681073, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56836251713841, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56836251746609, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56836251779377, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
+          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "M", "L", "XL"]}], "variants": [{"id": 56836251681073, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56836251713841, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56836251746609, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56836251779377, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
         </div>
         <div
           class="sagar-item"
@@ -483,8 +484,8 @@
           data-block-id="product_C7JaGQ"
           data-name="Hoodie"
           data-price="$199.00"
-          data-btn-label="View in the shop"
-          data-btn-url="https://nike-makknzjs.myshopify.com/products/hoodie"
+          data-btn-label="View product"
+          data-btn-url="product.html?id=hoodie"
           data-btn-target="_self"
         >
           <div class="sagar-garment">
@@ -524,7 +525,7 @@
               <span class="sagar-tag-face sagar-tag-front">$199</span>
             </div>
           </div>
-          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "L", "M", "XL"]}], "variants": [{"id": 56836002185521, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56836002218289, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56836002251057, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56836002283825, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
+          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "M", "L", "XL"]}], "variants": [{"id": 56836002185521, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56836002218289, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56836002251057, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56836002283825, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
         </div>
         <div
           class="sagar-item"
@@ -535,8 +536,8 @@
           data-block-id="product_6PWWJD"
           data-name="Sweatshirt"
           data-price="$199.00"
-          data-btn-label="View in the shop"
-          data-btn-url="https://nike-makknzjs.myshopify.com/products/sweatshirt"
+          data-btn-label="View product"
+          data-btn-url="product.html?id=sweatshirt"
           data-btn-target="_self"
         >
           <div class="sagar-garment">
@@ -576,7 +577,7 @@
               <span class="sagar-tag-face sagar-tag-front">$199</span>
             </div>
           </div>
-          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "L", "M", "XL"]}], "variants": [{"id": 56835806396721, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56835806429489, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56835806462257, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56835806495025, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
+          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "M", "L", "XL"]}], "variants": [{"id": 56835806396721, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56835806429489, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56835806462257, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56835806495025, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
         </div>
         <div
           class="sagar-item"
@@ -587,8 +588,8 @@
           data-block-id="product_tGP8fQ"
           data-name="Sweatshirt Plus"
           data-price="$199.00"
-          data-btn-label="View in the shop"
-          data-btn-url="https://nike-makknzjs.myshopify.com/products/sweatshirt-plus"
+          data-btn-label="View product"
+          data-btn-url="product.html?id=sweatshirt-plus"
           data-btn-target="_self"
         >
           <div class="sagar-garment">
@@ -628,7 +629,7 @@
               <span class="sagar-tag-face sagar-tag-front">$199</span>
             </div>
           </div>
-          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "L", "M", "XL"]}], "variants": [{"id": 56836143743281, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56836143776049, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56836143808817, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56836143841585, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
+          <script type="application/json" data-sagar-json>{"options": [{"name": "Size", "values": ["S", "M", "L", "XL"]}], "variants": [{"id": 56836143743281, "av": true, "price": "$199.00", "opts": ["S"]}, {"id": 56836143776049, "av": true, "price": "$199.00", "opts": ["L"]}, {"id": 56836143808817, "av": true, "price": "$199.00", "opts": ["M"]}, {"id": 56836143841585, "av": true, "price": "$199.00", "opts": ["XL"]}]}</script>
         </div>
         </div>
       </div>
@@ -640,7 +641,7 @@
           Crafted in heavyweight fleece. Cut oversized. Made to last.
         </div>
         <div class="sagar-cta-w" style="--b-pbg:#f4f1ec;--b-ptx:#2b2b28;--b-phbg:#2b2b28;--b-phtx:#f4f1ec;--b-scol:#2b2b28;--b-shbg:#2b2b28;--b-shtx:#f4f1ec;--b-rad:30px;--b-mt:18px;--b-mb:0px;--b-mtm:14px;--b-mbm:0px;">
-          <a class="sagar-cta sagar-cta-primary" href="https://nike-makknzjs.myshopify.com/collections/all"><span>Shop the Collection</span></a>
+          <a class="sagar-cta sagar-cta-primary" href="shop.html"><span>Shop the Collection</span></a>
         </div>
       </div>
     </div>
@@ -681,6 +682,42 @@
     </div>
   </section>
 
+
+  <!-- ===================== CATEGORIES ===================== -->
+  <section class="section" id="categories" style="padding-top:0">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-reveal>Shop by category</p>
+          <h2 class="h2" data-split style="margin-top:16px">Find your <em>fit</em>.</h2>
+        </div>
+        <a class="link-arrow" href="shop.html" data-reveal>View all products <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div class="cats-grid" data-reveal-stagger>
+        <a class="cat" href="shop.html?c=hoodies" data-reveal style="--tone:#ebe7e1" data-cursor="Shop">
+          <span class="cat-n">01</span>
+          <span class="cat-img"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071101472773.webp?height=1400&amp;v=1792065527" alt="" loading="lazy" decoding="async"></span>
+          <span class="cat-foot"><span><span class="cat-name">Hoodies</span><span class="cat-count">3 styles</span></span><span class="cat-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+        </a>
+        <a class="cat" href="shop.html?c=sweatshirts" data-reveal style="--tone:#f1ebdf" data-cursor="Shop">
+          <span class="cat-n">02</span>
+          <span class="cat-img"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071517318112.webp?height=1400&amp;v=1792066085" alt="" loading="lazy" decoding="async"></span>
+          <span class="cat-foot"><span><span class="cat-name">Sweatshirts</span><span class="cat-count">1 style</span></span><span class="cat-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+        </a>
+        <a class="cat" href="shop.html?c=outerwear" data-reveal style="--tone:#e3e5ec" data-cursor="Shop">
+          <span class="cat-n">03</span>
+          <span class="cat-img"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071514560224.webp?height=1400&amp;v=1792065608" alt="" loading="lazy" decoding="async"></span>
+          <span class="cat-foot"><span><span class="cat-name">Outerwear</span><span class="cat-count">1 style</span></span><span class="cat-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+        </a>
+        <a class="cat" href="shop.html?c=sneakers" data-reveal style="--tone:#ececea" data-cursor="Shop">
+          <span class="cat-n">04</span>
+          <span class="cat-img"><img src="assets/img/shoes/shoe-03.svg" alt="" loading="lazy" decoding="async"></span>
+          <span class="cat-foot"><span><span class="cat-name">Sneakers</span><span class="cat-count">7 styles</span></span><span class="cat-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================== HANG RAIL PRO ===================== -->
   <section id="hang-rail-pro" class="hr" data-hr-section data-speed="24" data-sag="0.07" data-swing="70">
     <div class="hr-bg" style="background-image: url('assets/img/hang-rail-bg.svg')"></div>
@@ -689,7 +726,7 @@
       <div class="hr-eyebrow"><span>New collection</span><span class="hr-sep" aria-hidden="true"></span><span class="hr-dim">Premium streetwear</span></div>
       <h2 class="hr-title">Hang Rail Pro</h2>
     </header>
-    <div class="hr-stage" data-hr-stage>
+    <div class="hr-stage" data-hr-stage data-cursor="Drag">
       <svg class="hr-rail" data-hr-rail aria-hidden="true" preserveAspectRatio="none">
         <defs>
           <linearGradient id="hr-rail-grad" x1="0" y1="0" x2="0" y2="1">
@@ -707,7 +744,7 @@
       <div class="hr-progress" aria-hidden="true"><span data-hr-progress></span></div>
       <div class="hr-copy">
         <p>Crafted in heavyweight fleece.<br>Cut oversized. Made to last.</p>
-        <a href="https://nike-makknzjs.myshopify.com/collections/all">Shop the Collection <span aria-hidden="true">&rarr;</span></a>
+        <a href="shop.html">Shop the Collection <span aria-hidden="true">&rarr;</span></a>
       </div>
     </div>
     <script type="application/json" data-hr-json>
@@ -716,7 +753,7 @@
     "name": "Blazzer",
     "price": "$199.00",
     "tag": "$199",
-    "url": "https://nike-makknzjs.myshopify.com/products/blazzer",
+    "url": "product.html?id=blazzer",
     "side": {
       "src": "https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071515248388.webp?height=840&amp;v=1792065611",
       "w": 525,
@@ -737,8 +774,8 @@
         "name": "Size",
         "values": [
           "S",
-          "L",
           "M",
+          "L",
           "XL"
         ]
       }
@@ -782,7 +819,7 @@
     "name": "Hoodie",
     "price": "$199.00",
     "tag": "$199",
-    "url": "https://nike-makknzjs.myshopify.com/products/hoodie",
+    "url": "product.html?id=hoodie",
     "side": {
       "src": "https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071514447647.webp?height=840&amp;v=1792065701",
       "w": 459,
@@ -803,8 +840,8 @@
         "name": "Size",
         "values": [
           "S",
-          "L",
           "M",
+          "L",
           "XL"
         ]
       }
@@ -848,7 +885,7 @@
     "name": "Hoodie Black",
     "price": "$199.00",
     "tag": "$199",
-    "url": "https://nike-makknzjs.myshopify.com/products/hoodie-black",
+    "url": "product.html?id=hoodie-black",
     "side": {
       "src": "https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071101516777.webp?height=840&amp;v=1792065529",
       "w": 431,
@@ -869,8 +906,8 @@
         "name": "Size",
         "values": [
           "S",
-          "L",
           "M",
+          "L",
           "XL"
         ]
       }
@@ -914,7 +951,7 @@
     "name": "Sweatshirt",
     "price": "$199.00",
     "tag": "$199",
-    "url": "https://nike-makknzjs.myshopify.com/products/sweatshirt",
+    "url": "product.html?id=sweatshirt",
     "side": {
       "src": "https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071517384792.webp?height=840&amp;v=1792066083",
       "w": 383,
@@ -935,8 +972,8 @@
         "name": "Size",
         "values": [
           "S",
-          "L",
           "M",
+          "L",
           "XL"
         ]
       }
@@ -980,7 +1017,7 @@
     "name": "Sweatshirt Plus",
     "price": "$199.00",
     "tag": "$199",
-    "url": "https://nike-makknzjs.myshopify.com/products/sweatshirt-plus",
+    "url": "product.html?id=sweatshirt-plus",
     "side": {
       "src": "https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071517049148.webp?height=840&amp;v=1792066000",
       "w": 501,
@@ -1001,8 +1038,8 @@
         "name": "Size",
         "values": [
           "S",
-          "L",
           "M",
+          "L",
           "XL"
         ]
       }
@@ -1046,7 +1083,7 @@
     "name": "Tshirt",
     "price": "$199.00",
     "tag": "$199",
-    "url": "https://nike-makknzjs.myshopify.com/products/tshirt",
+    "url": "product.html?id=tshirt",
     "side": {
       "src": "https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071516549024.webp?height=840&amp;v=1792065933",
       "w": 396,
@@ -1067,8 +1104,8 @@
         "name": "Size",
         "values": [
           "S",
-          "L",
           "M",
+          "L",
           "XL"
         ]
       }
@@ -1112,9 +1149,53 @@
     </script>
   </section>
 
+
+  <!-- ===================== FEATURE SCROLL ===================== -->
+  <section class="section" id="details" data-feat>
+    <div class="container feat-in">
+      <div class="feat-media" aria-hidden="true">
+        <div class="feat-frame">
+          <div class="feat-progress"><i></i><i></i><i></i><i></i></div>
+          <figure class="feat-img"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071516592552.webp?height=1400&amp;v=1792065999" alt="" loading="lazy" decoding="async"></figure><figure class="feat-img"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071514403809.webp?height=1400&amp;v=1792065704" alt="" loading="lazy" decoding="async"></figure><figure class="feat-img"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071101430110.webp?height=1400&amp;v=1792065524" alt="" loading="lazy" decoding="async"></figure><figure class="feat-img"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071517318112.webp?height=1400&amp;v=1792066085" alt="" loading="lazy" decoding="async"></figure>
+          <span class="feat-big" data-feat-num>01</span>
+        </div>
+      </div>
+      <div class="feat-list">
+        <header>
+          <p class="eyebrow" data-reveal>The details</p>
+          <h2 class="h2" data-split style="margin-top:18px">Built for the <em>everyday</em>, made to stay.</h2>
+        </header>
+        <article class="feat-item">
+          <span class="feat-idx">01</span>
+          <h3>Heavyweight fleece</h3>
+          <p>Dense, brushed-back fleece that keeps its shape wash after wash — soft inside, structured outside.</p>
+          <figure class="feat-item-img"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071516592552.webp?height=1400&amp;v=1792065999" alt="" loading="lazy" decoding="async"></figure>
+        </article>
+        <article class="feat-item">
+          <span class="feat-idx">02</span>
+          <h3>Cut oversized</h3>
+          <p>Dropped shoulders, a roomy body and a longer sleeve for an easy fit that layers over anything.</p>
+          <figure class="feat-item-img"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071514403809.webp?height=1400&amp;v=1792065704" alt="" loading="lazy" decoding="async"></figure>
+        </article>
+        <article class="feat-item">
+          <span class="feat-idx">03</span>
+          <h3>Made to last</h3>
+          <p>Reinforced seams, ribbed cuffs and a sturdy hem built for everyday wear, not one season.</p>
+          <figure class="feat-item-img"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071101430110.webp?height=1400&amp;v=1792065524" alt="" loading="lazy" decoding="async"></figure>
+        </article>
+        <article class="feat-item">
+          <span class="feat-idx">04</span>
+          <h3>Clean details</h3>
+          <p>Tonal branding, minimal hardware and nothing extra. Just the pieces you reach for first.</p>
+          <figure class="feat-item-img"><img src="https://nike-makknzjs.myshopify.com/cdn/shop/files/2610071517318112.webp?height=1400&amp;v=1792066085" alt="" loading="lazy" decoding="async"></figure>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================== NIKE ORBIT ===================== -->
   <section id="nike-orbit" class="orbit" data-orbit-section aria-label="Nike Orbit">
-    <div class="orbit-stage" data-orbit-stage>
+    <div class="orbit-stage" data-orbit-stage data-cursor="Drag">
       <div class="orbit-ring" data-orbit-ring aria-hidden="true"></div>
     </div>
     <div class="orbit-info" aria-live="polite">
@@ -1137,7 +1218,7 @@
   {
     "name": "Air Jordan 12 Retro",
     "price": "$149.00",
-    "url": "https://nike-makknzjs.myshopify.com/collections/all",
+    "url": "product.html?id=air-jordan-12-retro",
     "images": [
       "assets/img/shoes/shoe-01.svg"
     ],
@@ -1218,7 +1299,7 @@
   {
     "name": "Luka 5",
     "price": "$149.00",
-    "url": "https://nike-makknzjs.myshopify.com/collections/all",
+    "url": "product.html?id=luka-5",
     "images": [
       "assets/img/shoes/shoe-02.svg"
     ],
@@ -1299,7 +1380,7 @@
   {
     "name": "Tatum 5 Orbit",
     "price": "$149.00",
-    "url": "https://nike-makknzjs.myshopify.com/collections/all",
+    "url": "product.html?id=tatum-5-orbit",
     "images": [
       "assets/img/shoes/shoe-03.svg"
     ],
@@ -1380,7 +1461,7 @@
   {
     "name": "Sneaker 04",
     "price": "$149.00",
-    "url": "https://nike-makknzjs.myshopify.com/collections/all",
+    "url": "product.html?id=sneaker-04",
     "images": [
       "assets/img/shoes/shoe-04.svg"
     ],
@@ -1461,7 +1542,7 @@
   {
     "name": "Sneaker 05",
     "price": "$149.00",
-    "url": "https://nike-makknzjs.myshopify.com/collections/all",
+    "url": "product.html?id=sneaker-05",
     "images": [
       "assets/img/shoes/shoe-05.svg"
     ],
@@ -1542,7 +1623,7 @@
   {
     "name": "Sneaker 06",
     "price": "$149.00",
-    "url": "https://nike-makknzjs.myshopify.com/collections/all",
+    "url": "product.html?id=sneaker-06",
     "images": [
       "assets/img/shoes/shoe-06.svg"
     ],
@@ -1621,9 +1702,9 @@
     ]
   },
   {
-    "name": "Luka 5",
+    "name": "Luka 5 High",
     "price": "$149.00",
-    "url": "https://nike-makknzjs.myshopify.com/collections/all",
+    "url": "product.html?id=luka-5-high",
     "images": [
       "assets/img/shoes/shoe-07.svg"
     ],
@@ -1705,8 +1786,31 @@
     </script>
   </section>
 
+
+  <!-- ===================== TRENDING ===================== -->
+  <section class="section" id="trending" data-pg data-limit="8">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-reveal>Trending now</p>
+          <h2 class="h2" data-split style="margin-top:16px">This week’s <em>picks</em>.</h2>
+        </div>
+        <div class="tabs" role="group" aria-label="Filter products" data-reveal>
+          <span class="tab-ink" aria-hidden="true"></span>
+          <button type="button" class="tab" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="tab" data-filter="apparel" aria-pressed="false">Apparel</button>
+          <button type="button" class="tab" data-filter="footwear" aria-pressed="false">Sneakers</button>
+        </div>
+      </div>
+      <div class="pc-grid" data-pg-grid></div>
+      <div style="display:flex;justify-content:center;margin-top:56px" data-reveal>
+        <a class="btn btn-line" href="shop.html" data-magnetic>Shop all products <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================== OBSESSED ===================== -->
-  <section class="obs" data-obs-section>
+  <section class="obs" id="obsessed" data-obs-section>
     <div class="obs-head">
       <h2 class="obs-title">OBSESSED.</h2>
       <p class="obs-text">We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>
@@ -1727,44 +1831,41 @@
     </div>
   </section>
 
+
+  <!-- ===================== MEMBERSHIP ===================== -->
+  <section class="join" id="join">
+    <div class="join-bgword" aria-hidden="true">Join the club · Join the club · Join the club · Join the club ·</div>
+    <div class="container">
+      <div class="join-card" data-reveal="scale">
+        <p class="eyebrow no-line">Membership</p>
+        <h2 class="h2" data-split>Join the <em>club</em>.</h2>
+        <p>Be first to know about new drops, restocks and members-only releases.</p>
+        <form class="join-form" data-newsletter novalidate>
+          <label class="visually-hidden" for="join-email">Email address</label>
+          <input id="join-email" type="email" name="email" placeholder="Email address" autocomplete="email" required>
+          <button class="btn btn-dark" type="submit">Sign up</button>
+          <p class="form-msg" aria-live="polite"></p>
+        </form>
+        <small>We’ll only email you about the store. Unsubscribe any time.</small>
+      </div>
+    </div>
+  </section>
+
   </main>
 
-  <!-- ===================== FOOTER ===================== -->
-  <footer class="site-footer" id="contact">
-    <div class="site-footer-in">
-      <div>
-        <h2>Contact</h2>
-        <p>Questions about an order, sizing or returns? Get in touch and we&rsquo;ll help.</p>
-      </div>
-      <div><h2>Shop</h2><ul><li><a href="#nike-orbit">Nike Orbit</a></li><li><a href="#hang-rail-pro">Hand Rail Pro</a></li><li><a href="https://nike-makknzjs.myshopify.com/collections/all">All products</a></li></ul></div>
-      <div><h2>Help</h2><ul><li><a href="https://nike-makknzjs.myshopify.com/pages/contact">Contact us</a></li><li><a href="https://nike-makknzjs.myshopify.com/policies/shipping-policy">Shipping</a></li><li><a href="https://nike-makknzjs.myshopify.com/policies/refund-policy">Returns</a></li></ul></div>
-      <div><h2>Account</h2><ul><li><a href="https://nike-makknzjs.myshopify.com/account/login">Sign In</a></li><li><a href="https://nike-makknzjs.myshopify.com/account/register">Join Us</a></li></ul></div>
-    </div>
-    <div class="site-footer-base"><span>&copy; <span data-year></span> Nike store</span><span>Prices in USD</span></div>
-  </footer>
-
-  <!-- ===================== BAG DRAWER ===================== -->
-  <div class="bag" data-bag aria-hidden="true">
-    <div class="bag-scrim" data-bag-close></div>
-    <aside class="bag-panel" role="dialog" aria-modal="true" aria-label="Bag">
-      <div class="bag-head"><h2>Bag</h2><button type="button" class="icon-btn" data-bag-close aria-label="Close bag">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
-      <ul class="bag-list" data-bag-list></ul>
-      <div class="bag-foot">
-        <div class="bag-total"><span>Subtotal</span><span data-bag-total>$0.00</span></div>
-        <p class="bag-note" data-bag-note>Shipping and taxes calculated at checkout.</p>
-        <button type="button" class="bag-checkout" data-bag-checkout>Checkout</button>
-      </div>
-    </aside>
-  </div>
+  <div data-site-footer></div>
 
   <script src="assets/site-cart.js"></script>
+  <script src="assets/motion.js"></script>
   <script src="assets/quick-view.js"></script>
+  <script src="assets/data/catalog.js"></script>
+  <script src="assets/product-card.js"></script>
   <script src="assets/rack-showcase.js"></script>
   <script src="assets/hang-rail.js"></script>
   <script src="assets/nike-orbit.js"></script>
+  <script src="assets/sections.js"></script>
+  <script src="assets/hero.js"></script>
   <script src="assets/obsessed.js"></script>
-  <script src="assets/site.js"></script>
-  <script>document.querySelector('[data-year]').textContent = new Date().getFullYear();</script>
+  <script src="assets/marquee.js"></script>
 </body>
 </html>
